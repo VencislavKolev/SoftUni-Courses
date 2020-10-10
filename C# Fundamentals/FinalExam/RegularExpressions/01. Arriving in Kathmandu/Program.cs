@@ -1,0 +1,73 @@
+﻿using System;
+using System.Text.RegularExpressions;
+
+namespace _01._Arriving_in_Kathmandu
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+
+            string input;
+            while ((input = Console.ReadLine()) != "Last note")
+            {
+                string lengthPattern = @"\d+";
+                Match lenMatch = Regex.Match(input, lengthPattern);
+                if (lenMatch.Success)
+                {
+                    int length = int.Parse(lenMatch.ToString());
+                    string pattern = $@"(?<peek>^[A-Za-z0-9!@#$?]+)=(?<length>\d+)<<(?<geohash>.{{{length}}})$";
+                    Match match = Regex.Match(input, pattern);
+                    if (match.Success)
+                    {
+                        string peek = match.Groups["peek"].Value;
+                        string nameOfPeek = string.Empty;
+                        for (int i = 0; i < peek.Length; i++)
+                        {
+                            char currChar = peek[i];
+                            if (char.IsLetterOrDigit(currChar))
+                            {
+                                nameOfPeek += currChar;
+                            }
+                        }
+                        string geohash = match.Groups["geohash"].Value;
+                        Console.WriteLine($"Coordinates found! {nameOfPeek} -> {geohash}");
+                        continue;
+                    }
+                }
+                Console.WriteLine("Nothing found!");
+            }
+        }
+    }
+}
+
+//            string pattern = @"^(?<nameofpeak>[A-Za-z0-9!@#$?]+)=(?<length>\d+)<<(?<code>(.*?)+)$";
+//            string input;
+//            Regex regex = new Regex(pattern);
+//            while ((input = Console.ReadLine()) != "Last note")
+//            {
+//                Match match = regex.Match(input);
+//                if (match.Success == false)
+//                {
+//                    Console.WriteLine("Nothing found!");
+//                    continue;
+//                }
+//                string nameOfPeak = match.Groups["nameofpeak"].Value;
+//                int length = int.Parse(match.Groups["length"].Value);
+//                string code = match.Groups["code"].Value;
+//                string nameOfPeakResult = string.Empty;
+//                if (code.Length != length)
+//                {
+//                    Console.WriteLine("Nothing found!");
+//                    continue;
+//                }
+
+//                for (int i = 0; i < nameOfPeak.Length; i++)
+//                {
+//                    if (char.IsLetterOrDigit(nameOfPeak[i]))
+//                    {
+//                        nameOfPeakResult += nameOfPeak[i];
+//                    }
+//                }
+
+//                Console.WriteLine($"Coordinates found! {nameOfPeakResult} -> {code}");
