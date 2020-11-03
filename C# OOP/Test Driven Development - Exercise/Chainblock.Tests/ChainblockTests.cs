@@ -689,7 +689,5 @@ namespace Chainblock.Tests
 
             CollectionAssert.IsEmpty(actTransactions);
         }
-        //•	GetAllInAmountRange(lo, hi) – returns all transactions within a range by insertion order (the range is inclusive). Returns an empty collection if no such transactions were found.
-        //----- Add Contains Tests -----
     }
 }
