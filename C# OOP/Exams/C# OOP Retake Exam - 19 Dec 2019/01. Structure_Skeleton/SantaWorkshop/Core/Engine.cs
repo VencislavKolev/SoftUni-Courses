@@ -16,7 +16,7 @@
         {
             this.writer = new Writer();
             this.reader = new Reader();
-            //this.controller = new Controller();
+            this.controller = new Controller();
         }
 
         public void Run()
@@ -28,48 +28,48 @@
                 {
                     Environment.Exit(0);
                 }
-                //try
-                //{
-                string result = string.Empty;
-
-                if (input[0] == "AddDwarf")
+                try
                 {
-                    string dwarfType = input[1];
-                    string dwarfName = input[2];
+                    string result = string.Empty;
 
-                    result = controller.AddDwarf(dwarfType, dwarfName);
+                    if (input[0] == "AddDwarf")
+                    {
+                        string dwarfType = input[1];
+                        string dwarfName = input[2];
+
+                        result = controller.AddDwarf(dwarfType, dwarfName);
+                    }
+                    else if (input[0] == "AddPresent")
+                    {
+                        string presentName = input[1];
+                        int energyRequired = int.Parse(input[2]);
+
+                        result = controller.AddPresent(presentName, energyRequired);
+                    }
+                    else if (input[0] == "AddInstrumentToDwarf")
+                    {
+                        string dwarfname = input[1];
+                        int power = int.Parse(input[2]);
+
+                        result = controller.AddInstrumentToDwarf(dwarfname, power);
+                    }
+                    else if (input[0] == "CraftPresent")
+                    {
+                        string presentName = input[1];
+
+                        result = controller.CraftPresent(presentName);
+                    }
+                    else if (input[0] == "Report")
+                    {
+                        result = controller.Report();
+                    }
+
+                    writer.WriteLine(result);
                 }
-                else if (input[0] == "AddPresent")
+                catch (Exception ex)
                 {
-                    string presentName = input[1];
-                    int energyRequired = int.Parse(input[2]);
-
-                    result = controller.AddPresent(presentName, energyRequired);
+                    writer.WriteLine(ex.Message);
                 }
-                else if (input[0] == "AddInstrumentToDwarf")
-                {
-                    string dwarfname = input[1];
-                    int power = int.Parse(input[2]);
-
-                    result = controller.AddInstrumentToDwarf(dwarfname, power);
-                }
-                else if (input[0] == "CraftPresent")
-                {
-                    string presentName = input[1];
-
-                    result = controller.CraftPresent(presentName);
-                }
-                else if (input[0] == "Report")
-                {
-                    result = controller.Report();
-                }
-
-                writer.WriteLine(result);
-                //}
-                //catch (Exception ex)
-                //{
-                //    writer.WriteLine(ex.Message);
-                //}
             }
         }
     }
