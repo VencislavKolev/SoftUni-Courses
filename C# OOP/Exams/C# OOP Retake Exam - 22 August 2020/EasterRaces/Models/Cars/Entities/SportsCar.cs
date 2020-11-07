@@ -1,21 +1,19 @@
 ﻿
 using EasterRaces.Utilities.Messages;
 using System;
-using System.Net.Http.Headers;
 
 namespace EasterRaces.Models.Cars.Entities
 {
-    public class MuscleCar : Car
+    public class SportsCar : Car
     {
-        private const int MIN_HP = 400;
-        private const int MAX_HP = 600;
-        private const int DEF_MUSCLECAR_CUB_CENTIMETERS = 5000;
+        private const int MIN_HP = 250;
+        private const int MAX_HP = 450;
+        private const int DEF_SPORTSCAR_CUB_CENTIMETERS = 3000;
 
         private int horsePower;
-        public MuscleCar(string model, int horsePower)
-            : base(model, horsePower, DEF_MUSCLECAR_CUB_CENTIMETERS)
+        public SportsCar(string model, int horsePower)
+            : base(model, horsePower, DEF_SPORTSCAR_CUB_CENTIMETERS)
         {
-
         }
 
         public override int HorsePower
@@ -23,7 +21,7 @@ namespace EasterRaces.Models.Cars.Entities
             get => this.horsePower;
             protected set
             {
-                if (value < MIN_HP || value>MAX_HP)
+                if (value < MIN_HP || value > MAX_HP)
                 {
                     throw new ArgumentException(string.Format(ExceptionMessages.InvalidHorsePower, value));
                 }

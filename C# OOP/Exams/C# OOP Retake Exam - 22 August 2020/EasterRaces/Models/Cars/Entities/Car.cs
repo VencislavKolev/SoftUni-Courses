@@ -13,6 +13,8 @@ namespace EasterRaces.Models.Cars.Entities
         public Car(string model, int horsePower, double cubicCentimeters)
         {
             this.Model = model;
+            this.HorsePower = horsePower;
+            this.CubicCentimeters = cubicCentimeters;
         }
         public string Model
         {
@@ -28,14 +30,13 @@ namespace EasterRaces.Models.Cars.Entities
             }
         }
 
-        public virtual int HorsePower { get; private set; }
+        public virtual int HorsePower { get; protected set; }
 
-        public virtual double CubicCentimeters { get; private set; }
+        public double CubicCentimeters { get; private set; }
 
         public double CalculateRacePoints(int laps)
         {
-            double result = this.CubicCentimeters / this.HorsePower * laps;
-            return result;
+            return this.CubicCentimeters / this.HorsePower * laps;
         }
     }
 }
