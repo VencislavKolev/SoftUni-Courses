@@ -61,26 +61,26 @@
             Throws.InstanceOf<InvalidOperationException>()
             .With.Message.EqualTo("This present already exists!"));
         }
-        [Test]
-        public void CreateShouldPhysicallyAddThePresents()
-        {
-            string expName = "Present";
-            double expMagic = 5;
+        //[Test]
+        //public void CreateShouldPhysicallyAddThePresents()
+        //{
+        //    string expName = "Present";
+        //    double expMagic = 5;
 
-            Present present = new Present(expName, expMagic);
-            Present present2 = new Present(expName, expMagic + 1);
-            this.bag.Create(present);
-            this.bag.Create(present2);
+        //    Present present = new Present(expName, expMagic);
+        //    Present present2 = new Present(expName, expMagic + 1);
+        //    this.bag.Create(present);
+        //    this.bag.Create(present2);
 
-            IReadOnlyCollection<Present> exp = new List<Present>()
-            {
-                present,present2
-            };
+        //    IReadOnlyCollection<Present> exp = new List<Present>()
+        //    {
+        //        present,present2
+        //    };
 
-            IReadOnlyCollection<Present> act = this.bag.GetPresents();
+        //    IReadOnlyCollection<Present> act = this.bag.GetPresents();
 
-            CollectionAssert.AreEqual(exp, act);
-        }
+        //    CollectionAssert.AreEqual(exp, act);
+        //}
         [Test]
         public void CreateShouldAddValidPresent()
         {
