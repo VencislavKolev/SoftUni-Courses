@@ -62,7 +62,7 @@ namespace EasterRaces.Models.Races.Entities
             else if (this.drivers.Contains(driver))
             {
                 //"" paramName
-                throw new ArgumentNullException("", string.Format(ExceptionMessages.DriverAlreadyAdded));
+                throw new ArgumentNullException(string.Format(ExceptionMessages.DriverAlreadyAdded));
             }
             else
             {

@@ -1,9 +1,8 @@
 ﻿
-using EasterRaces.Models.Cars.Contracts;
-using EasterRaces.Models.Cars.Entities;
-using EasterRaces.Models.Drivers.Contracts;
-using EasterRaces.Utilities.Messages;
 using System;
+using EasterRaces.Utilities.Messages;
+using EasterRaces.Models.Cars.Contracts;
+using EasterRaces.Models.Drivers.Contracts;
 
 namespace EasterRaces.Models.Drivers.Entities
 {

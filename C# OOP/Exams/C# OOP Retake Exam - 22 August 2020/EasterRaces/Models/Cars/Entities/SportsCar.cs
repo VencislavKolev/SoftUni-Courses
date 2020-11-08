@@ -1,6 +1,6 @@
 ﻿
-using EasterRaces.Utilities.Messages;
 using System;
+using EasterRaces.Utilities.Messages;
 
 namespace EasterRaces.Models.Cars.Entities
 {

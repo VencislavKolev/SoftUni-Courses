@@ -1,4 +1,8 @@
-﻿
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Collections.Generic;
+
 using EasterRaces.Core.Contracts;
 using EasterRaces.Models.Cars.Contracts;
 using EasterRaces.Models.Cars.Entities;
@@ -8,10 +12,6 @@ using EasterRaces.Models.Races.Contracts;
 using EasterRaces.Models.Races.Entities;
 using EasterRaces.Repositories.Entities;
 using EasterRaces.Utilities.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace EasterRaces.Core.Entities
 {
@@ -104,14 +104,7 @@ namespace EasterRaces.Core.Entities
             this.raceRepository.Add(race);
             return string.Format(OutputMessages.RaceCreated, name);
         }
-        //public void NumberOfWinsPerDriver()
-        //{
-        //    var drivers = this.driverRepository.GetAll();
-        //    foreach (var driver in drivers)
-        //    {
-        //        Console.WriteLine(driver.NumberOfWins);
-        //    }
-        //}
+        
         public string StartRace(string raceName)
         {
             IRace race = this.raceRepository.GetByName(raceName);
@@ -129,10 +122,9 @@ namespace EasterRaces.Core.Entities
                 .CalculateRacePoints(race.Laps))
                 .ToList();
 
-
-            var firstDriver = drivers[0].Name;
-            var secondDriver = drivers[1].Name;
-            var thirdDriver = drivers[2].Name;
+            string firstDriver = drivers[0].Name;
+            string secondDriver = drivers[1].Name;
+            string thirdDriver = drivers[2].Name;
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Driver {firstDriver} wins {raceName} race.")
@@ -143,5 +135,13 @@ namespace EasterRaces.Core.Entities
             this.raceRepository.Remove(race);
             return sb.ToString().TrimEnd();
         }
+        //public void NumberOfWinsPerDriver()
+        //{
+        //    var drivers = this.driverRepository.GetAll();
+        //    foreach (var driver in drivers)
+        //    {
+        //        Console.WriteLine(driver.NumberOfWins);
+        //    }
+        //}
     }
 }

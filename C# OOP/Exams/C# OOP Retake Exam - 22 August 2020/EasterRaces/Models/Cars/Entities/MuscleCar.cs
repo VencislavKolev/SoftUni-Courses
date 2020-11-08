@@ -1,7 +1,6 @@
 ﻿
-using EasterRaces.Utilities.Messages;
 using System;
-using System.Net.Http.Headers;
+using EasterRaces.Utilities.Messages;
 
 namespace EasterRaces.Models.Cars.Entities
 {

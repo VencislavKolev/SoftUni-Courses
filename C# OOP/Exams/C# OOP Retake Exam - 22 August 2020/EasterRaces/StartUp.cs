@@ -12,7 +12,7 @@ namespace EasterRaces
             IChampionshipController controller =  new ChampionshipController();
             IReader reader = new ConsoleReader();
             IWriter writer = new ConsoleWriter();
-
+            
             Engine enigne = new Engine(controller, reader, writer);
             enigne.Run();
         }

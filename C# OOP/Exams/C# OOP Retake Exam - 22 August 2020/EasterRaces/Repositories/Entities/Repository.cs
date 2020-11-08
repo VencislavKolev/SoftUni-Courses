@@ -1,8 +1,6 @@
 ﻿
-using EasterRaces.Repositories.Contracts;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+using EasterRaces.Repositories.Contracts;
 
 namespace EasterRaces.Repositories.Entities
 {
@@ -14,13 +12,7 @@ namespace EasterRaces.Repositories.Entities
             this.models = new List<T>();
         }
         public abstract void Add(T model);
-        //{
-        //    this.models.Add(model);
-        //}
         public abstract bool Remove(T model);
-        //{
-        //    return this.models.Remove(model);
-        //}
         public abstract T GetByName(string name);
 
         public IReadOnlyCollection<T> GetAll() => (IReadOnlyCollection<T>)this.models;
