@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
-using OnlineShop.Common.Constants;
+
 using OnlineShop.Common.Enums;
+using OnlineShop.Common.Constants;
 
 namespace OnlineShop.Core
 {
