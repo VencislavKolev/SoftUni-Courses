@@ -12,14 +12,14 @@ namespace OnlineShop.Core
 {
     public class Controller : IController
     {
-        private ICollection<IComputer> computers = new List<IComputer>();
-        private ICollection<IComponent> components = new List<IComponent>();
-        private ICollection<IPeripheral> peripherals = new List<IPeripheral>();
+        private readonly ICollection<IComputer> computers;
+        private readonly ICollection<IComponent> components;
+        private readonly ICollection<IPeripheral> peripherals;
         public Controller()
         {
-            //this.computers =   new List<IComputer>();
-            //this.components =  new List<IComponent>();
-            //this.peripherals = new List<IPeripheral>();
+            this.computers = new List<IComputer>();
+            this.components = new List<IComponent>();
+            this.peripherals = new List<IPeripheral>();
         }
         public string AddComponent(int computerId, int id, string componentType, string manufacturer, string model, decimal price, double overallPerformance, int generation)
         {

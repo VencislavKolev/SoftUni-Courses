@@ -1,7 +1,7 @@
 ﻿
 using System;
-using System.Linq;
 using System.Text;
+using System.Linq;
 using System.Collections.Generic;
 
 using OnlineShop.Common.Constants;
@@ -28,8 +28,6 @@ namespace OnlineShop.Models.Products.Computers
             base.Price +
             this.Components.Sum(x => x.Price) +
             this.Peripherals.Sum(x => x.Price);
-            //this.Components.Select(x => x.Price).Sum() +
-            //this.Peripherals.Select(x => x.Price).Sum();
 
         public override double OverallPerformance =>
             this.Components.Count > 0
@@ -37,7 +35,6 @@ namespace OnlineShop.Models.Products.Computers
             base.OverallPerformance +
               this.Components
                 .Average(x => x.OverallPerformance)
-                //.Select(x => x.OverallPerformance)
                     :
             base.OverallPerformance;
 
