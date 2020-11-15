@@ -83,7 +83,7 @@ namespace OnlineShop.Core
                  .OrderByDescending(x => x.OverallPerformance)
                  .FirstOrDefault();
 
-            if (computer == null)
+            if (computer == null )
             {
                 string excMsg = string.Format(ExceptionMessages.CanNotBuyComputer, budget);
                 throw new ArgumentException(excMsg);
