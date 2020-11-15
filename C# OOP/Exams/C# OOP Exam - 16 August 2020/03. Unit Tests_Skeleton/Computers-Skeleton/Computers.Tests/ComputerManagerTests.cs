@@ -1,6 +1,7 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+
+using NUnit.Framework;
 
 namespace Computers.Tests
 {
@@ -116,6 +117,7 @@ namespace Computers.Tests
 
             Computer computer = this.computerManager.GetComputer(manufacturer, model);
 
+            Assert.AreEqual(this.computer, computer);
             Assert.AreEqual(manufacturer, computer.Manufacturer);
             Assert.AreEqual(model, computer.Model);
             Assert.AreEqual(price, computer.Price);
@@ -127,6 +129,7 @@ namespace Computers.Tests
 
             Computer computer = this.computerManager.RemoveComputer(manufacturer, model);
 
+            Assert.AreEqual(this.computer, computer);
             Assert.AreEqual(manufacturer, computer.Manufacturer);
             Assert.AreEqual(model, computer.Model);
             Assert.AreEqual(price, computer.Price);
@@ -160,6 +163,19 @@ namespace Computers.Tests
             ICollection<Computer> actCollection = this.computerManager.GetComputersByManufacturer(manufacturer);
 
             CollectionAssert.AreEqual(expCollection, actCollection);
+        }
+        [Test]
+        public void GetAllByManufacturerShouldReturnCorrectCollection()
+        {
+            this.computerManager.AddComputer(this.computer);
+            this.computerManager.AddComputer(new Computer(this.manufacturer, "Air", 999.99m));
+            this.computerManager.AddComputer(new Computer("Asus", "K555", 700));
+
+            ICollection<Computer> collection = this.computerManager
+                .GetComputersByManufacturer(this.manufacturer);
+
+            Assert.That(collection.Count, Is.EqualTo(2));
+
         }
         [Test]
         public void GetComputerByManufacturerShouldThrowExceptionWhenNullManufacturer()
