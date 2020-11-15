@@ -9,7 +9,7 @@ namespace OnlineShop.Models.Products.Peripherals
             this.ConnectionType = connectionType;
         }
 
-        public string ConnectionType { get; }
+        public string ConnectionType { get; private set; }
 
         public override string ToString()
         {

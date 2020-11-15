@@ -8,7 +8,7 @@ namespace OnlineShop.Models.Products.Components
         {
             this.Generation = generation;
         }
-        public int Generation { get; }
+        public int Generation { get; private set; }
         public override string ToString()
         {
             return base.ToString() + $" Generation: {this.Generation}";

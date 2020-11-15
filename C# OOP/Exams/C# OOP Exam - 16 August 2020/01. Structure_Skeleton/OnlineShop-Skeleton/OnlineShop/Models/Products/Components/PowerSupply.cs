@@ -7,7 +7,7 @@ namespace OnlineShop.Models.Products.Components
 
         public PowerSupply(int id, string manufacturer, string model, decimal price, double overallPerformance, int generation) : base(id, manufacturer, model, price, overallPerformance, generation)
         {
-            
+            //this.OverallPerformance *= POWER_SUPPLY_MULTIPLIER;
         }
         public override double OverallPerformance => base.OverallPerformance * POWER_SUPPLY_MULTIPLIER;
     }
