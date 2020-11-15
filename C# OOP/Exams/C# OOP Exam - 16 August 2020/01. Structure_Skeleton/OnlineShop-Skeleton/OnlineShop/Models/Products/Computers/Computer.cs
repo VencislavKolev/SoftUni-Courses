@@ -29,14 +29,10 @@ namespace OnlineShop.Models.Products.Computers
             this.Components.Sum(x => x.Price) +
             this.Peripherals.Sum(x => x.Price);
 
-        public override double OverallPerformance =>
-            this.Components.Count > 0
-                    ?
+        public override double OverallPerformance => this.Components.Count > 0 ?
             base.OverallPerformance +
-              this.Components
-                .Average(x => x.OverallPerformance)
-                    :
-            base.OverallPerformance;
+            this.Components.Average(x => x.OverallPerformance)
+            : base.OverallPerformance;
 
         public void AddComponent(IComponent component)
         {

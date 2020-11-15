@@ -7,7 +7,7 @@ namespace OnlineShop.Models.Products.Components
 
         public VideoCard(int id, string manufacturer, string model, decimal price, double overallPerformance, int generation) : base(id, manufacturer, model, price, overallPerformance, generation)
         {
-          //  this.OverallPerformance *= VIDEO_CARD_MULTIPLIER;
+         
         }
         public override double OverallPerformance => base.OverallPerformance * VIDEO_CARD_MULTIPLIER;
     }
