@@ -97,9 +97,9 @@ namespace OnlineShop.Core
         {
             CheckIfNonExisitngComputerId(id);
             IComputer computer = this.computers.First(x => x.Id == id);
-            string res = computer.ToString();
             this.computers.Remove(computer);
 
+            string res = computer.ToString();
             return res;
         }
 
