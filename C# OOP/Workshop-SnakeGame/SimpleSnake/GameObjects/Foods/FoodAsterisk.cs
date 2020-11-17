@@ -1,5 +1,5 @@
 ﻿
-namespace SimpleSnake.GameObjects.Food
+namespace SimpleSnake.GameObjects.Foods
 {
     public class FoodAsterisk : Food
     {
