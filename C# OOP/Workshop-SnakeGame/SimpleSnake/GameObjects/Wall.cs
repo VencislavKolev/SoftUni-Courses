@@ -7,10 +7,18 @@ namespace SimpleSnake.GameObjects
         public Wall(int leftX, int topY)
             : base(leftX, topY)
         {
-            this.CreateLines();
+            this.InitializeWallBorders();
         }
 
-        private void CreateLines()
+        public bool IsPointOfWall(Point snakeHead)
+        {
+            return snakeHead.LeftX == 0 ||
+                   snakeHead.LeftX == this.LeftX - 1 ||
+                   snakeHead.TopY == 0 ||
+                   snakeHead.TopY == this.TopY;
+        }
+
+        private void InitializeWallBorders()
         {
             this.SetHorizontalLine(0);
             this.SetHorizontalLine(this.TopY);
@@ -32,6 +40,5 @@ namespace SimpleSnake.GameObjects
                 this.Draw(leftX, currTopY, wallSymbol);
             }
         }
-
     }
 }
