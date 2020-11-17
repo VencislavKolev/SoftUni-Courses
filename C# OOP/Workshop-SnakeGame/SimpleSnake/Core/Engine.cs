@@ -47,10 +47,16 @@ namespace SimpleSnake.Core
             int leftX = this.wall.LeftX + 1;
             int topY = 3;
 
-            Console.SetCursorPosition(leftX, topY);
-            Console.Write("Would you like to continue? y/n");
+            Console.SetCursorPosition(leftX, 0);
+            Console.WriteLine($"Player points: {snake.PlayerPoints}");
 
+            Console.SetCursorPosition(leftX, 1);
+            Console.WriteLine($"Player level: {snake.PlayerLevel}");
+
+            Console.SetCursorPosition(leftX, topY);
+            Console.Write("Would you like to continue? y/n -> ");
             string input = Console.ReadLine();
+
             if (input == "y")
             {
                 Console.Clear();

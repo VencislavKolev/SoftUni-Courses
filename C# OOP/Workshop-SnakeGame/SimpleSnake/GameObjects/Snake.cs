@@ -28,6 +28,9 @@ namespace SimpleSnake.GameObjects
             this.GetFoods();
             this.CreateSnake();
         }
+
+        public int PlayerLevel => this.snakeParts.Count;
+        public int PlayerPoints { get; private set; }
         private int RandomFoodNumber => new Random().Next(0, this.foods.Count);
         private void CreateSnake()
         {
@@ -82,7 +85,7 @@ namespace SimpleSnake.GameObjects
         private void Eat(Point direction, Point currSnakeHead)
         {
             int length = this.foods[foodIndex].FoodPoints;
-
+            this.PlayerPoints += length;
             for (int i = 0; i < length; i++)
             {
                 this.snakeParts.Enqueue(new Point(this.nextLeftX, this.nextTopY));
