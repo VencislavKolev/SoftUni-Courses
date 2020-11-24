@@ -91,8 +91,7 @@ SELECT DISTINCT JobTitle
 
 --Task 19
 SELECT TOP(10) * FROM Projects
-	ORDER BY StartDate,
-			[Name]
+	ORDER BY StartDate ASC, [Name] ASC
 
 --Task 20
 SELECT TOP(7) 
@@ -101,21 +100,14 @@ SELECT TOP(7)
 	ORDER BY HireDate DESC
 
 --Task 21
-SELECT * FROM Departments
-	WHERE [Name] = 'Engineering'
-	OR [Name] = 'Tool Design'
-	OR [Name] = 'Marketing'
-	OR [Name] = 'Information Services'
-
-SELECT FirstName,Salary
-	FROM Employees
-	WHERE DepartmentID=1
+--SELECT * FROM Departments
+--	WHERE [Name] = 'Engineering'
+--	OR [Name] = 'Tool Design'
+--	OR [Name] = 'Marketing'
+--	OR [Name] = 'Information Services'
 
 UPDATE Employees
 	SET Salary *= 1.12
-	WHERE DepartmentId = 
-	(SELECT DepartmentID FROM Departments
-	WHERE [Name] = 'Engineering'
-	OR [Name] = 'Tool Design'
-	OR [Name] = 'Marketing'
-	OR [Name] = 'Information Services')
+	WHERE DepartmentId IN(1, 2, 4, 11)
+
+SELECT Salary FROM Employees
