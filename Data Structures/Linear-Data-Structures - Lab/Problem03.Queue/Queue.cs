@@ -54,15 +54,15 @@
         public void Enqueue(T item)
         {
 
+            Node<T> current = this._head;
             Node<T> toInsert = new Node<T>(item);
 
-            if (this._head == null)
+            if (current == null)
             {
                 this._head = toInsert;
             }
             else
             {
-                Node<T> current = this._head;
                 while (current.Next != null)
                 {
                     current = current.Next;
