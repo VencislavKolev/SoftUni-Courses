@@ -21,8 +21,7 @@
 
         public void AddFirst(T item)
         {
-            Node<T> newHead = new Node<T>(item);
-            newHead.Next = this._head;
+            Node<T> newHead = new Node<T>(item, this._head);
             this._head = newHead;
 
             this.Count++;
@@ -49,20 +48,15 @@
 
         public T GetFirst()
         {
-            if (this._head == null)
-            {
-                throw new InvalidOperationException(EmptyLinkedListMessage);
-            }
+            this.CheckIfEmpty();
             return this._head.Value;
         }
 
         public T GetLast()
         {
-            if (this._head == null)
-            {
-                throw new InvalidOperationException(EmptyLinkedListMessage);
-            }
+            this.CheckIfEmpty();
             Node<T> current = this._head;
+
             while (current.Next != null)
             {
                 current = current.Next;
@@ -72,30 +66,37 @@
 
         public T RemoveFirst()
         {
-            Node<T> toRemove = this._head;
-            if (toRemove == null)
-            {
-                throw new InvalidOperationException(EmptyLinkedListMessage);
-            }
+            Node<T> firstNode = this._head;
+            this.CheckIfEmpty();
             this._head = this._head.Next;
             this.Count--;
 
-            return toRemove.Value;
+            return firstNode.Value;
         }
 
         public T RemoveLast()
         {
+            this.CheckIfEmpty();
+
             Node<T> current = this._head;
-            if (current == null)
+            T element;
+            if (current.Next == null)
             {
-                throw new InvalidOperationException(EmptyLinkedListMessage);
+                element = current.Value;
+                this._head = null;
             }
-            while (current.Next != null)
+            else
             {
-                current = current.Next;
+                int tempCount = 0;
+                while (tempCount + 2 != this.Count)
+                {
+                    current = current.Next;
+                    tempCount++;
+                }
+                element = current.Next.Value;
+                current.Next = null;
             }
-            T element = current.Value;
-            current = default;
+
             this.Count--;
 
             return element;
@@ -113,5 +114,14 @@
 
         IEnumerator IEnumerable.GetEnumerator()
             => this.GetEnumerator();
+
+
+        private void CheckIfEmpty()
+        {
+            if (this.Count == 0)
+            {
+                throw new InvalidOperationException(EmptyLinkedListMessage);
+            }
+        }
     }
 }

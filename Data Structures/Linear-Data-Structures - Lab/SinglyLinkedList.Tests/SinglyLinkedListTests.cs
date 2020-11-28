@@ -153,6 +153,7 @@ namespace SinglyLinkedList.Tests
             for (var i = 0; i < count; i++)
             {
                 var lastElement = _list.GetLast();
+                var toCompare = array[i];
                 Assert.AreEqual(array[i], lastElement);
 
                 _list.RemoveLast();
