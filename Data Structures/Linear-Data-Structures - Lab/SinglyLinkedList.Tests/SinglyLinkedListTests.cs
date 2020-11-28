@@ -119,6 +119,7 @@ namespace SinglyLinkedList.Tests
                 var randomValue = this._random.Next(100);
                 array[i] = randomValue;
                 _list.AddLast(randomValue);
+                //_list.AddFirst(randomValue);
             }
 
             for (var i = 0; i < count; i++)
