@@ -7,7 +7,7 @@ SELECT CountryName, IsoCode FROM Countries
 
 --TASK 13
 SELECT PeakName,RiverName,
-	LOWER(PeakName + SUBSTRING(RiverName,2,LEN(RiverName))) as Mix
+	LOWER(PeakName + SUBSTRING(RiverName, 2, LEN(RiverName))) as Mix
 	FROM Peaks, Rivers
 	WHERE RIGHT(PeakName, 1) = LEFT(RiverName, 1)
 	ORDER BY Mix
