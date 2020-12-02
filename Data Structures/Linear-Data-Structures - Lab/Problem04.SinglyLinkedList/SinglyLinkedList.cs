@@ -79,27 +79,24 @@
             this.CheckIfEmpty();
 
             Node<T> current = this._head;
-            T element;
+			Node<T> last = null;// T element;
             if (current.Next == null)
             {
-                element = current.Value;
+                last = this.head;
                 this._head = null;
             }
             else
             {
-                int tempCount = 0;
-                while (tempCount + 2 != this.Count)
+                while (current.Next.Next != null)
                 {
                     current = current.Next;
-                    tempCount++;
                 }
-                element = current.Next.Value;
+				last = current.Next;
                 current.Next = null;
             }
 
             this.Count--;
-
-            return element;
+            return last.item;
         }
 
         public IEnumerator<T> GetEnumerator()
