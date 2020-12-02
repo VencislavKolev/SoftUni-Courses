@@ -7,7 +7,6 @@ namespace Problem02.DoublyLinkedList.Tests
     using System.Reflection;
     using DoublyLinkedList;
     using NUnit.Framework;
-    using Problem02.DoublyLinkedList;
 
     [TestFixture]
     public class LinkedListTests
