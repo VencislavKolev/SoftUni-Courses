@@ -33,10 +33,25 @@ SELECT
 	WHERE ManagerID IS NULL
 
 --TASK 18
+---OPTION 1
+SELECT 
+	DepartmentID,
+	Salary AS [ThirdHighestSalary]
+FROM(
+	SELECT 
+		DepartmentID,
+		Salary,
+		DENSE_RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS [Rank]
+		FROM Employees
+		GROUP BY DepartmentID, Salary) AS tmp
+WHERE Rank = 3
+
+---OPTION 2
 SELECT DISTINCT
 	DepartmentID,
-	Salary
-	FROM(SELECT 
+	Salary AS [ThirdHighestSalary]
+FROM(
+	SELECT 
 		DepartmentID,
 		Salary,
 		DENSE_RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS [Rank]
@@ -44,3 +59,14 @@ SELECT DISTINCT
 WHERE Rank = 3
 
 --TASK 19
+SELECT TOP(10)
+	FirstName,
+	LastName,
+	DepartmentID
+FROM Employees AS e1
+WHERE e1.Salary > (SELECT 
+					AVG(Salary) AS AvgSalary
+					FROM Employees AS emplAvgSalary
+					WHERE emplAvgSalary.DepartmentID = e1.DepartmentID
+					GROUP BY DepartmentID)
+ORDER BY DepartmentID ASC
