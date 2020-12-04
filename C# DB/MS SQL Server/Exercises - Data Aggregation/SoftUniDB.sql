@@ -33,3 +33,14 @@ SELECT
 	WHERE ManagerID IS NULL
 
 --TASK 18
+SELECT DISTINCT
+	DepartmentID,
+	Salary
+	FROM(SELECT 
+		DepartmentID,
+		Salary,
+		DENSE_RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS [Rank]
+		FROM Employees) AS [SalaryRank]
+WHERE Rank = 3
+
+--TASK 19
