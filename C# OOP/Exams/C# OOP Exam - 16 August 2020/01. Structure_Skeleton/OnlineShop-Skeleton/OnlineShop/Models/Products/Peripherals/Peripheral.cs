@@ -1,4 +1,6 @@
 ﻿
+using OnlineShop.Common.Constants;
+
 namespace OnlineShop.Models.Products.Peripherals
 {
     public abstract class Peripheral : Product, IPeripheral
@@ -9,11 +11,11 @@ namespace OnlineShop.Models.Products.Peripherals
             this.ConnectionType = connectionType;
         }
 
-        public string ConnectionType { get; private set; }
+        public string ConnectionType { get; }
 
         public override string ToString()
         {
-            return base.ToString() + $" Connection Type: {this.ConnectionType}";
+            return base.ToString() + string.Format(SuccessMessages.PeripheralToString, this.ConnectionType);
         }
     }
 }

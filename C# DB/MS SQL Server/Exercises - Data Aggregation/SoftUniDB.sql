@@ -16,7 +16,21 @@ SELECT
 	GROUP BY DepartmentID
 
 --TASK 15
+SELECT * INTO EmployeeWithHighSalaries FROM Employees
+WHERE Salary > 30000
 
+DELETE FROM EmployeeWithHighSalaries 
+WHERE ManagerID = 42
+
+UPDATE EmployeeWithHighSalaries
+SET Salary += 5000
+WHERE DepartmentID = 1
+
+SELECT 
+	DepartmentID,
+	AVG(Salary) AS AverageSalary
+	FROM EmployeeWithHighSalaries
+GROUP BY DepartmentID
 
 --TASK 16
 SELECT 

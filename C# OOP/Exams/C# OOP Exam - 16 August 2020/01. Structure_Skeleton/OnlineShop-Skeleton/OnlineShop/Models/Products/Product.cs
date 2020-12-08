@@ -1,6 +1,6 @@
 ﻿
 using System;
-
+using System.Text;
 using OnlineShop.Common.Constants;
 
 
@@ -88,7 +88,13 @@ namespace OnlineShop.Models.Products
         }
         public override string ToString()
         {
-            return $"Overall Performance: {this.OverallPerformance:f2}. Price: {this.Price:f2} - {this.GetType().Name}: {this.Manufacturer} {this.Model} (Id: {this.Id})";
+            return string.Format(SuccessMessages.ProductToString,
+                this.OverallPerformance.ToString("F2"),
+                this.Price.ToString("F2"),
+                this.GetType().Name,
+                this.Manufacturer,
+                this.Model,
+                this.Id);
         }
     }
 }

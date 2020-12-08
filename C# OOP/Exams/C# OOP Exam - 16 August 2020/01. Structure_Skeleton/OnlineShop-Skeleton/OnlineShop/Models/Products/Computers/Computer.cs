@@ -15,7 +15,8 @@ namespace OnlineShop.Models.Products.Computers
         private readonly ICollection<IComponent> components;
         private readonly ICollection<IPeripheral> peripherals;
 
-        protected Computer(int id, string manufacturer, string model, decimal price, double overallPerformance) : base(id, manufacturer, model, price, overallPerformance)
+        protected Computer(int id, string manufacturer, string model, decimal price, double overallPerformance) 
+            : base(id, manufacturer, model, price, overallPerformance)
         {
             this.components = new List<IComponent>();
             this.peripherals = new List<IPeripheral>();
@@ -29,23 +30,14 @@ namespace OnlineShop.Models.Products.Computers
             this.Components.Sum(x => x.Price) +
             this.Peripherals.Sum(x => x.Price);
 
-        public override double OverallPerformance =>
-            this.Components.Count > 0
-                    ?
-            base.OverallPerformance +
-              this.Components
-                .Average(x => x.OverallPerformance)
-                    :
-            base.OverallPerformance;
+        public override double OverallPerformance
+            => CalculateOverallPerformance();
 
         public void AddComponent(IComponent component)
         {
-            if (this.Components.Contains(component))
+            if (this.Components.Any(x => x.GetType() == component.GetType()))
             {
-                string componentType = component.GetType().Name;
-                string computerType = this.GetType().Name;
-
-                string excMsg = string.Format(ExceptionMessages.ExistingComponent, componentType, computerType, component.Id);
+                string excMsg = string.Format(ExceptionMessages.ExistingComponent, component.GetType().Name, this.GetType().Name, this.Id);
 
                 throw new ArgumentException(excMsg);
             }
@@ -55,12 +47,9 @@ namespace OnlineShop.Models.Products.Computers
 
         public void AddPeripheral(IPeripheral peripheral)
         {
-            if (this.Peripherals.Contains(peripheral))
+            if (this.Peripherals.Any(x => x.GetType() == peripheral.GetType()))
             {
-                string peripheralType = peripheral.GetType().Name;
-                string computerType = this.GetType().Name;
-
-                string excMsg = string.Format(ExceptionMessages.ExistingPeripheral, peripheralType, computerType, peripheral.Id);
+                string excMsg = string.Format(ExceptionMessages.ExistingPeripheral, peripheral.GetType().Name, this.GetType().Name, this.Id);
 
                 throw new ArgumentException(excMsg);
             }
@@ -68,24 +57,28 @@ namespace OnlineShop.Models.Products.Computers
         }
         public IComponent RemoveComponent(string componentType)
         {
-            IComponent component = this.Components
-                 .FirstOrDefault(x => x.GetType().Name == componentType);
-
-            if (component != null)
+            if (!this.Components.Any(x => x.GetType().Name == componentType))
             {
-                this.components.Remove(component);
+                string excMsg = string.Format(ExceptionMessages.NotExistingComponent, componentType, this.GetType().Name, this.Id);
+                throw new ArgumentException(excMsg);
             }
+
+            IComponent component = this.Components.FirstOrDefault(x => x.GetType().Name == componentType);
+            this.components.Remove(component);
+
             return component;
         }
         public IPeripheral RemovePeripheral(string peripheralType)
         {
-            IPeripheral peripheral = this.Peripherals
-                .FirstOrDefault(x => x.GetType().Name == peripheralType);
-
-            if (peripheral != null)
+            if (!this.Peripherals.Any(x => x.GetType().Name == peripheralType))
             {
-                this.peripherals.Remove(peripheral);
+                string excMsg = string.Format(ExceptionMessages.NotExistingComponent, peripheralType, this.GetType().Name, this.Id);
+                throw new ArgumentException(excMsg);
             }
+
+            IPeripheral peripheral = this.Peripherals.FirstOrDefault(x => x.GetType().Name == peripheralType);
+            this.peripherals.Remove(peripheral);
+
             return peripheral;
         }
         public override string ToString()
@@ -96,22 +89,30 @@ namespace OnlineShop.Models.Products.Computers
             sb.AppendLine($" Components ({this.Components.Count}):");
             foreach (var component in this.Components)
             {
-                sb.AppendLine("  " + component.ToString());
+                sb.AppendLine($"  {component}");
             }
 
-            double averageOverallPeripheralPerformance = 0.0;
-            if (this.Peripherals.Any())
-            {
-                averageOverallPeripheralPerformance = this.Peripherals.Average(x => x.OverallPerformance);
-            }
+            string averageResult = this.Peripherals.Count == 0 ? "0.00" :
+                this.Peripherals.Average(x => x.OverallPerformance).ToString("F2");
 
-            sb.AppendLine($" Peripherals ({this.Peripherals.Count}); Average Overall Performance ({averageOverallPeripheralPerformance:f2}):");
+            sb.AppendLine($" Peripherals ({this.Peripherals.Count}); Average Overall Performance ({averageResult}):");
             foreach (var peripheral in this.Peripherals)
             {
-                sb.AppendLine("  " + peripheral.ToString());
+                sb.AppendLine($"  {peripheral}");
             }
 
             return sb.ToString().TrimEnd();
+        }
+
+        private double CalculateOverallPerformance()
+        {
+            if (this.Components.Count == 0)
+            {
+                return base.OverallPerformance;
+            }
+
+            double result = base.OverallPerformance + this.Components.Average(x => x.OverallPerformance);
+            return result;
         }
     }
 }
