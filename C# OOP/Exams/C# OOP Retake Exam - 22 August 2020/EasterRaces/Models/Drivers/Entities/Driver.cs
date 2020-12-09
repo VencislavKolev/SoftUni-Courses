@@ -1,5 +1,6 @@
 ﻿
 using System;
+
 using EasterRaces.Utilities.Messages;
 using EasterRaces.Models.Cars.Contracts;
 using EasterRaces.Models.Drivers.Contracts;
@@ -8,21 +9,24 @@ namespace EasterRaces.Models.Drivers.Entities
 {
     public class Driver : IDriver
     {
-        private const int MIN_NAME_LEN = 5;
-
         private string name;
+
         public Driver(string name)
         {
             this.Name = name;
         }
         public string Name
         {
-            get => this.name;
+            get
+            {
+                return this.name;
+            }
             private set
             {
-                if (string.IsNullOrEmpty(value) || value.Length < MIN_NAME_LEN)
+                if (string.IsNullOrEmpty(value) || value.Length < 5)
                 {
-                    throw new ArgumentException(string.Format(ExceptionMessages.InvalidName, value, MIN_NAME_LEN));
+                    string excMsg = string.Format(ExceptionMessages.InvalidName, value, 5);
+                    throw new ArgumentException(excMsg);
                 }
                 this.name = value;
             }
@@ -38,7 +42,7 @@ namespace EasterRaces.Models.Drivers.Entities
         {
             if (car == null)
             {
-                throw new ArgumentException(ExceptionMessages.CarInvalid);
+                throw new ArgumentNullException(nameof(ICar), ExceptionMessages.CarInvalid);
             }
             this.Car = car;
         }

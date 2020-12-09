@@ -1,31 +1,28 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
+
 using EasterRaces.Models.Races.Contracts;
+using EasterRaces.Repositories.Contracts;
 
 namespace EasterRaces.Repositories.Entities
 {
-    public class RaceRepository : Repository<IRace>
+    public class RaceRepository : IRepository<IRace>
     {
         private ICollection<IRace> races;
         public RaceRepository()
         {
             this.races = new List<IRace>();
         }
+        public void Add(IRace model)
+            => this.races.Add(model);
+        
+        public IReadOnlyCollection<IRace> GetAll()
+            => (IReadOnlyCollection<IRace>)this.races;
 
-        public override void Add(IRace model)
-        {
-            this.races.Add(model);
-        }
-        public override bool Remove(IRace model)
-        {
-            return this.races.Remove(model);
-        }
+        public IRace GetByName(string name)
+            => this.races.FirstOrDefault(x => x.Name == name);
 
-        public override IRace GetByName(string name)
-        {
-            return this.races.FirstOrDefault(x => x.Name == name);
-        }
-
+        public bool Remove(IRace model)
+            => this.races.Remove(model);
     }
 }

@@ -1,28 +1,28 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+
 using EasterRaces.Models.Drivers.Contracts;
+using EasterRaces.Repositories.Contracts;
 
 namespace EasterRaces.Repositories.Entities
 {
-    public class DriverRepository : Repository<IDriver>
+    public class DriverRepository : IRepository<IDriver>
     {
-        ICollection<IDriver> drivers;
+        private ICollection<IDriver> drivers;
         public DriverRepository()
         {
             this.drivers = new List<IDriver>();
         }
+        public void Add(IDriver model)
+            => this.drivers.Add(model);
 
-        public override void Add(IDriver model)
-        {
-            this.drivers.Add(model);
-        }
-        public override bool Remove(IDriver model)
-        {
-           return this.drivers.Remove(model);
-        }
-        public override IDriver GetByName(string name)
-        {
-            return this.drivers.FirstOrDefault(x => x.Name == name);
-        }
+        public IReadOnlyCollection<IDriver> GetAll()
+            => (IReadOnlyCollection<IDriver>)this.drivers;
+
+        public IDriver GetByName(string name)
+            => this.drivers.FirstOrDefault(x => x.Name == name);
+
+        public bool Remove(IDriver model)
+            => this.drivers.Remove(model);
     }
 }

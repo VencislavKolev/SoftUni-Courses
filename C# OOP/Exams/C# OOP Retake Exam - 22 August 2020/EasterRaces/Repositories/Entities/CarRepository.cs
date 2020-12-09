@@ -1,31 +1,28 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
+
 using EasterRaces.Models.Cars.Contracts;
+using EasterRaces.Repositories.Contracts;
 
 namespace EasterRaces.Repositories.Entities
 {
-    public class CarRepository : Repository<ICar>
+    public class CarRepository : IRepository<ICar>
     {
-        ICollection<ICar> cars;
+        private ICollection<ICar> drivers;
         public CarRepository()
         {
-            this.cars = new List<ICar>();
+            this.drivers = new List<ICar>();
         }
+        public void Add(ICar model)
+            => this.drivers.Add(model);
 
-        public override void Add(ICar model)
-        {
-            this.cars.Add(model);
-        }
+        public IReadOnlyCollection<ICar> GetAll()
+            => (IReadOnlyCollection<ICar>)this.drivers;
 
-        public override bool Remove(ICar model)
-        {
-            return this.cars.Remove(model);
-        }
-        public override ICar GetByName(string name)
-        {
-            return this.cars.FirstOrDefault(x => x.Model == name);
-        }
+        public ICar GetByName(string name)
+            => this.drivers.FirstOrDefault(x => x.Model == name);
 
+        public bool Remove(ICar model)
+            => this.drivers.Remove(model);
     }
 }

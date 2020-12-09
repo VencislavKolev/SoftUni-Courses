@@ -1,7 +1,7 @@
-﻿using EasterRaces.Core.Contracts;
-using EasterRaces.IO;
+﻿using EasterRaces.IO;
 using EasterRaces.IO.Contracts;
 using EasterRaces.Core.Entities;
+using EasterRaces.Core.Contracts;
 
 namespace EasterRaces
 {
@@ -9,10 +9,10 @@ namespace EasterRaces
     {
         public static void Main()
         {
-            IChampionshipController controller =  new ChampionshipController();
+            IChampionshipController controller = new ChampionshipController();
             IReader reader = new ConsoleReader();
             IWriter writer = new ConsoleWriter();
-            
+
             Engine enigne = new Engine(controller, reader, writer);
             enigne.Run();
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Collections.Generic;
 
 using EasterRaces.Core.Contracts;
 using EasterRaces.Models.Cars.Contracts;
@@ -10,6 +9,7 @@ using EasterRaces.Models.Drivers.Contracts;
 using EasterRaces.Models.Drivers.Entities;
 using EasterRaces.Models.Races.Contracts;
 using EasterRaces.Models.Races.Entities;
+using EasterRaces.Repositories.Contracts;
 using EasterRaces.Repositories.Entities;
 using EasterRaces.Utilities.Messages;
 
@@ -17,47 +17,14 @@ namespace EasterRaces.Core.Entities
 {
     public class ChampionshipController : IChampionshipController
     {
-        private const int MIN_PARTICIPANTS = 3;
-
-        private DriverRepository driverRepository;
-        private CarRepository carRepository;
-        private RaceRepository raceRepository;
-
+        private readonly IRepository<IDriver> driverRepository;
+        private readonly IRepository<IRace> raceRepository;
+        private readonly IRepository<ICar> carRepository;
         public ChampionshipController()
         {
             this.driverRepository = new DriverRepository();
-            this.carRepository = new CarRepository();
             this.raceRepository = new RaceRepository();
-        }
-        public string CreateDriver(string driverName)
-        {
-            if (this.driverRepository.GetByName(driverName) != null)
-            {
-                throw new ArgumentException(string.Format(ExceptionMessages.DriversExists, driverName));
-            }
-            IDriver driver = new Driver(driverName);
-            this.driverRepository.Add(driver);
-
-            return string.Format(OutputMessages.DriverCreated, driverName);
-        }
-        public string CreateCar(string type, string model, int horsePower)
-        {
-            ICar car = null;
-            if (type == "Muscle")
-            {
-                car = new MuscleCar(model, horsePower);
-            }
-            else if (type == "Sports")
-            {
-                car = new SportsCar(model, horsePower);
-            }
-            if (this.carRepository.GetByName(model) != null)
-            {
-                throw new ArgumentException(string.Format(ExceptionMessages.CarExists, model));
-            }
-            this.carRepository.Add(car);
-
-            return string.Format(OutputMessages.CarCreated, type, model);
+            this.carRepository = new CarRepository();
         }
         public string AddCarToDriver(string driverName, string carModel)
         {
@@ -74,6 +41,7 @@ namespace EasterRaces.Core.Entities
             }
 
             driver.AddCar(car);
+
             return string.Format(OutputMessages.CarAdded, driverName, carModel);
         }
 
@@ -91,57 +59,96 @@ namespace EasterRaces.Core.Entities
             }
 
             race.AddDriver(driver);
+
             return string.Format(OutputMessages.DriverAdded, driverName, raceName);
+        }
+
+        public string CreateCar(string type, string model, int horsePower)
+        {
+            ICar car = null;
+            if (type == "Muscle")
+            {
+                car = new MuscleCar(model, horsePower);
+            }
+            else if (type == "Sports")
+            {
+                car = new SportsCar(model, horsePower);
+            }
+            if (this.carRepository.GetByName(model) != null)
+            {
+                throw new ArgumentException(string.Format(ExceptionMessages.CarExists, model));
+            }
+
+            this.carRepository.Add(car);
+            return string.Format(OutputMessages.CarCreated, car.GetType().Name, model);
+
+        }
+
+        public string CreateDriver(string driverName)
+        {
+            IDriver driver = this.driverRepository.GetByName(driverName);
+
+            if (driver != null)
+            {
+                throw new ArgumentException(string.Format(ExceptionMessages.DriversExists, driverName));
+            }
+
+            driver = new Driver(driverName);
+            this.driverRepository.Add(driver);
+
+            return string.Format(OutputMessages.DriverCreated, driverName);
         }
 
         public string CreateRace(string name, int laps)
         {
-            IRace race = new Race(name, laps);
-            if (this.raceRepository.GetByName(name) != null)
+            IRace race = this.raceRepository.GetByName(name);
+            if (race != null)
             {
                 throw new InvalidOperationException(string.Format(ExceptionMessages.RaceExists, name));
             }
+
+            race = new Race(name, laps);
             this.raceRepository.Add(race);
+
             return string.Format(OutputMessages.RaceCreated, name);
         }
-        
+
         public string StartRace(string raceName)
         {
             IRace race = this.raceRepository.GetByName(raceName);
-            if (this.raceRepository.GetByName(raceName) == null)
+            if (race == null)
             {
                 throw new InvalidOperationException(string.Format(ExceptionMessages.RaceNotFound, raceName));
             }
-            if (race.Drivers.Count < MIN_PARTICIPANTS)
+
+            if (race.Drivers.Count < 3)
             {
-                throw new InvalidOperationException(string.Format(ExceptionMessages.RaceInvalid, raceName, MIN_PARTICIPANTS));
+                throw new InvalidOperationException(string.Format(ExceptionMessages.RaceInvalid, raceName, 3));
             }
 
-            List<IDriver> drivers = race.Drivers
+            IDriver[] topDrivers = race.Drivers
                 .OrderByDescending(x => x.Car
                 .CalculateRacePoints(race.Laps))
-                .ToList();
+                .Take(3)
+                .ToArray();
 
-            string firstDriver = drivers[0].Name;
-            string secondDriver = drivers[1].Name;
-            string thirdDriver = drivers[2].Name;
+            IDriver winner = topDrivers[0];
+            winner.WinRace();
+            //Console.WriteLine($"{string.Format(OutputMessages.DriverFirstPosition,winner.Name,raceName)}");
+
+            IDriver secondPlace = topDrivers[1];
+            //Console.WriteLine($"{string.Format(OutputMessages.DriverSecondPosition, secondPlace.Name, raceName)}");
+
+            IDriver thirdPlace = topDrivers[2];
+            //Console.WriteLine($"{string.Format(OutputMessages.DriverThirdPosition, thirdPlace.Name, raceName)}");
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Driver {firstDriver} wins {raceName} race.")
-                .AppendLine($"Driver {secondDriver} is second in {raceName} race.")
-                .AppendLine($"Driver {thirdDriver} is third in {raceName} race.");
+            sb.AppendLine(string.Format(OutputMessages.DriverFirstPosition, winner.Name, raceName))
+                .AppendLine(string.Format(OutputMessages.DriverSecondPosition, secondPlace.Name, raceName))
+                .AppendLine(string.Format(OutputMessages.DriverThirdPosition, thirdPlace.Name, raceName));
 
-            this.driverRepository.GetByName(firstDriver).WinRace();
             this.raceRepository.Remove(race);
             return sb.ToString().TrimEnd();
         }
-        //public void NumberOfWinsPerDriver()
-        //{
-        //    var drivers = this.driverRepository.GetAll();
-        //    foreach (var driver in drivers)
-        //    {
-        //        Console.WriteLine(driver.NumberOfWins);
-        //    }
-        //}
     }
 }
