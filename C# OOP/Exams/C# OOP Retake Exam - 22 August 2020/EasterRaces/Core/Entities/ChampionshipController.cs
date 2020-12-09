@@ -127,20 +127,14 @@ namespace EasterRaces.Core.Entities
             }
 
             IDriver[] topDrivers = race.Drivers
-                .OrderByDescending(x => x.Car
-                .CalculateRacePoints(race.Laps))
+                .OrderByDescending(x => x.Car.CalculateRacePoints(race.Laps))
                 .Take(3)
                 .ToArray();
 
             IDriver winner = topDrivers[0];
             winner.WinRace();
-            //Console.WriteLine($"{string.Format(OutputMessages.DriverFirstPosition,winner.Name,raceName)}");
-
             IDriver secondPlace = topDrivers[1];
-            //Console.WriteLine($"{string.Format(OutputMessages.DriverSecondPosition, secondPlace.Name, raceName)}");
-
             IDriver thirdPlace = topDrivers[2];
-            //Console.WriteLine($"{string.Format(OutputMessages.DriverThirdPosition, thirdPlace.Name, raceName)}");
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(string.Format(OutputMessages.DriverFirstPosition, winner.Name, raceName))

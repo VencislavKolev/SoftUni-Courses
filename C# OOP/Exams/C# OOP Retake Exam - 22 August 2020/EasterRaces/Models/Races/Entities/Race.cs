@@ -55,7 +55,6 @@ namespace EasterRaces.Models.Races.Entities
 
         public IReadOnlyCollection<IDriver> Drivers => (IReadOnlyCollection<IDriver>)this.drivers;
 
-        //TODO check ArgumentNullExceptions
         public void AddDriver(IDriver driver)
         {
             if (driver == null)

@@ -36,7 +36,7 @@ namespace EasterRaces.Models.Drivers.Entities
 
         public int NumberOfWins { get; private set; }
 
-        public bool CanParticipate => this.Car == null ? false : true;
+        public bool CanParticipate => this.Car == null ? false : true; //this.Car != null;
 
         public void AddCar(ICar car)
         {
