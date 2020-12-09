@@ -84,8 +84,8 @@ namespace OnlineShop.Core
         public string BuyBest(decimal budget)
         {
             IComputer bestComputer = this.computers
-                    .OrderByDescending(x => x.OverallPerformance)
                     .Where(x => x.Price <= budget)
+                    .OrderByDescending(x => x.OverallPerformance)
                     .FirstOrDefault();
             if (bestComputer == null)
             {
@@ -119,9 +119,9 @@ namespace OnlineShop.Core
             this.ValidateComputerWithIdExists(computerId);
 
             IComputer computer = this.computers.First(x => x.Id == computerId);
-            computer.RemoveComponent(componentType);
+            IComponent component =  computer.RemoveComponent(componentType);
 
-            IComponent component = this.components.First(x => x.GetType().Name == componentType);
+            //IComponent component = this.components.First(x => x.GetType().Name == componentType);
             this.components.Remove(component);
 
             string result = string.Format(SuccessMessages.RemovedComponent, componentType, component.Id);
@@ -133,9 +133,9 @@ namespace OnlineShop.Core
             this.ValidateComputerWithIdExists(computerId);
 
             IComputer computer = this.computers.First(x => x.Id == computerId);
-            computer.RemovePeripheral(peripheralType);
+            IPeripheral peripheral = computer.RemovePeripheral(peripheralType);
 
-            IPeripheral peripheral = this.peripherals.First(x => x.GetType().Name == peripheralType);
+            //IPeripheral peripheral = this.peripherals.First(x => x.GetType().Name == peripheralType);
             this.peripherals.Remove(peripheral);
 
             string result = string.Format(SuccessMessages.RemovedComponent, peripheralType, peripheral.Id);
@@ -229,7 +229,6 @@ namespace OnlineShop.Core
         }
     }
 }
-
 //using System;
 //using System.Linq;
 //using System.Collections.Generic;

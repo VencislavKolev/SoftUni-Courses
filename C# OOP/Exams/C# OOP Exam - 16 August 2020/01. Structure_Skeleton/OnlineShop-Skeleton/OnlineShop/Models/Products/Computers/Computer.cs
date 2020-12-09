@@ -35,7 +35,7 @@ namespace OnlineShop.Models.Products.Computers
 
         public void AddComponent(IComponent component)
         {
-            if (this.Components.Any(x => x.GetType() == component.GetType()))
+            if (this.components.Any(x => x.GetType() == component.GetType()))
             {
                 string excMsg = string.Format(ExceptionMessages.ExistingComponent, component.GetType().Name, this.GetType().Name, this.Id);
 
@@ -47,7 +47,7 @@ namespace OnlineShop.Models.Products.Computers
 
         public void AddPeripheral(IPeripheral peripheral)
         {
-            if (this.Peripherals.Any(x => x.GetType() == peripheral.GetType()))
+            if (this.peripherals.Any(x => x.GetType() == peripheral.GetType()))
             {
                 string excMsg = string.Format(ExceptionMessages.ExistingPeripheral, peripheral.GetType().Name, this.GetType().Name, this.Id);
 
@@ -57,26 +57,26 @@ namespace OnlineShop.Models.Products.Computers
         }
         public IComponent RemoveComponent(string componentType)
         {
-            if (!this.Components.Any(x => x.GetType().Name == componentType))
+            if (!this.components.Any(x => x.GetType().Name == componentType))
             {
                 string excMsg = string.Format(ExceptionMessages.NotExistingComponent, componentType, this.GetType().Name, this.Id);
                 throw new ArgumentException(excMsg);
             }
 
-            IComponent component = this.Components.FirstOrDefault(x => x.GetType().Name == componentType);
+            IComponent component = this.components.FirstOrDefault(x => x.GetType().Name == componentType);
             this.components.Remove(component);
 
             return component;
         }
         public IPeripheral RemovePeripheral(string peripheralType)
         {
-            if (!this.Peripherals.Any(x => x.GetType().Name == peripheralType))
+            if (!this.peripherals.Any(x => x.GetType().Name == peripheralType))
             {
-                string excMsg = string.Format(ExceptionMessages.NotExistingComponent, peripheralType, this.GetType().Name, this.Id);
+                string excMsg = string.Format(ExceptionMessages.NotExistingPeripheral, peripheralType, this.GetType().Name, this.Id);
                 throw new ArgumentException(excMsg);
             }
 
-            IPeripheral peripheral = this.Peripherals.FirstOrDefault(x => x.GetType().Name == peripheralType);
+            IPeripheral peripheral = this.peripherals.FirstOrDefault(x => x.GetType().Name == peripheralType);
             this.peripherals.Remove(peripheral);
 
             return peripheral;
