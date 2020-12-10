@@ -1,20 +1,20 @@
 ﻿
 using System;
-using PlayersAndMonsters.Core.Contracts;
 using PlayersAndMonsters.IO.Contracts;
+using PlayersAndMonsters.Core.Contracts;
 
 namespace PlayersAndMonsters.Core
 {
     public class Engine : IEngine
     {
-        private IManagerController managerController;
         private IReader reader;
         private IWriter writer;
-        public Engine(IManagerController managerController, IReader reader, IWriter writer)
+        private IManagerController managerController;
+        public Engine(IReader reader, IWriter writer)
         {
-            this.managerController = managerController;
             this.reader = reader;
             this.writer = writer;
+            this.managerController = new ManagerController();
         }
         public void Run()
         {

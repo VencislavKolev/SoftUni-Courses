@@ -9,7 +9,7 @@ namespace PlayersAndMonsters.IO
     {
         public void WriteLine(string message)
         {
-            File.AppendAllText("../../../output.txt", message + Environment.NewLine);
+            //File.AppendAllText("../../../output.txt", message + Environment.NewLine);
             Console.WriteLine(message);
         }
 
