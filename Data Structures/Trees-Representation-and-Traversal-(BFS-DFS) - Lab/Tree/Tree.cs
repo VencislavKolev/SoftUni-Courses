@@ -44,7 +44,7 @@
 
             while (queue.Count > 0)
             {
-                var subTree = queue.Dequeue();
+                Tree<T> subTree = queue.Dequeue();
                 result.Add(subTree.Value);
 
                 foreach (var child in subTree.Children)
@@ -69,7 +69,6 @@
 
             //  return this.OrderDfsWithStack();
         }
-
         private ICollection<T> OrderDfsWithStack()
         {
             var result = new Stack<T>();
