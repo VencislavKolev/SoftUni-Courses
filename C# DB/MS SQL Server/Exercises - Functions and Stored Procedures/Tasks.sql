@@ -71,50 +71,90 @@
 
 --Task 7
 
-CREATE OR ALTER FUNCTION ufn_IsWordComprisedHARD(@setOfLetters NVARCHAR(MAX), @word NVARCHAR(MAX))
-RETURNS BIT
+--CREATE OR ALTER FUNCTION ufn_IsWordComprisedHARD(@setOfLetters NVARCHAR(MAX), @word NVARCHAR(MAX))
+--RETURNS BIT
+--AS
+--BEGIN
+--	DECLARE @i INT = 1;
+--	WHILE(@i <= LEN(@word))
+--	BEGIN
+
+--		DECLARE @result BIT = 0;
+--		DECLARE @currWordChar NCHAR(1) = SUBSTRING(@word,@i,1);
+--		DECLARE @j INT = 1;
+
+--			WHILE(@j <= LEN(@setOfLetters))
+--			BEGIN
+--				DECLARE @currLettersChar NCHAR(1) = SUBSTRING(@setOfLetters,@j,1);
+--				IF(@currWordChar = @currLettersChar)
+--					SET @result = 1;
+--					SET @j = @j + 1;
+--			END
+--		IF(@result = 0)
+--		BREAK;
+--		SET @i = @i + 1;
+--	END
+--	RETURN @result;
+--END
+
+--CREATE OR ALTER FUNCTION ufn_IsWordComprised(@setOfLetters NVARCHAR(MAX), @word NVARCHAR(MAX))
+--RETURNS BIT
+--AS
+--BEGIN
+--	DECLARE @counter INT = 1;
+--	DECLARE @currWordChar CHAR;
+
+--	WHILE(@counter <= LEN(@word))
+--	BEGIN
+--		SET @currWordChar = SUBSTRING(@word,@counter,1);
+--		DECLARE @indexOfMatchedChar INT = CHARINDEX(@currWordChar,@setOfLetters,1);
+--		IF(@indexOfMatchedChar <= 0)
+--		RETURN 0
+--		SET @counter = @counter + 1;
+--	END
+--	RETURN 1
+--END
+
+--SELECT dbo.ufn_IsWordComprised('bobr','Rob')
+--SELECT dbo.ufn_IsWordComprised('oistmiahf','halves')
+--SELECT dbo.ufn_IsWordComprised('oistmiahf','Sofia')
+
+--Task 8
+CREATE PROCEDURE usp_DeleteEmployeesFromDepartment(@departmentId INT) 
 AS
 BEGIN
-	DECLARE @i INT = 1;
-	WHILE(@i <= LEN(@word))
-	BEGIN
+	--
+	DELETE FROM EmployeesProjects
+	WHERE EmployeeID IN (
+						SELECT EmployeeID FROM Employees
+						WHERE DepartmentID = @departmentId
+						)
 
-		DECLARE @result BIT = 0;
-		DECLARE @currWordChar NCHAR(1) = SUBSTRING(@word,@i,1);
-		DECLARE @j INT = 1;
+	UPDATE Employees
+	SET ManagerID = NULL
+	WHERE ManagerID IN (
+						SELECT EmployeeID FROM Employees
+						WHERE DepartmentID = @departmentId
+						)
 
-			WHILE(@j <= LEN(@setOfLetters))
-			BEGIN
-				DECLARE @currLettersChar NCHAR(1) = SUBSTRING(@setOfLetters,@j,1);
-				IF(@currWordChar = @currLettersChar)
-					SET @result = 1;
-					SET @j = @j + 1;
-			END
-		IF(@result = 0)
-		BREAK;
-		SET @i = @i + 1;
-	END
-	RETURN @result;
+	ALTER TABLE Departments
+	ALTER COLUMN ManagerId INT
+
+	--Setting ManagerID to NULL if ManagerId in to be deleted EmployeeId's
+	UPDATE Departments
+	SET ManagerID = NULL
+	WHERE ManagerID IN (
+						SELECT EmployeeID FROM Employees
+						WHERE DepartmentID = @departmentId
+						)
+
+	DELETE FROM Departments
+	WHERE DepartmentID = @departmentId 
+
+	DELETE FROM Employees
+	WHERE DepartmentID = @departmentId
+
+	SELECT COUNT(*) FROM Employees
+	WHERE DepartmentID = @departmentId
 END
-
-CREATE OR ALTER FUNCTION ufn_IsWordComprised(@setOfLetters NVARCHAR(MAX), @word NVARCHAR(MAX))
-RETURNS BIT
-AS
-BEGIN
-	DECLARE @counter INT = 1;
-	DECLARE @currWordChar CHAR;
-
-	WHILE(@counter <= LEN(@word))
-	BEGIN
-		SET @currWordChar = SUBSTRING(@word,@counter,1);
-		DECLARE @indexOfMatchedChar INT = CHARINDEX(@currWordChar,@setOfLetters,1);
-		IF(@indexOfMatchedChar <= 0)
-		RETURN 0
-		SET @counter = @counter + 1;
-	END
-	RETURN 1
-END
-
-SELECT dbo.ufn_IsWordComprised('bobr','Rob')
-SELECT dbo.ufn_IsWordComprised('oistmiahf','halves')
-SELECT dbo.ufn_IsWordComprised('oistmiahf','Sofia')
+GO
