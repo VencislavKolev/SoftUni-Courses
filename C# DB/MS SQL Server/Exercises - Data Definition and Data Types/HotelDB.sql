@@ -118,7 +118,9 @@ VALUES
 
 --Judje 23
 UPDATE Payments
-SET TaxRate-=3
+SET TaxRate -= TaxRate * 0.03
+
+SELECT TaxRate FROM Payments
 
 --Judje 24
 TRUNCATE TABLE Occupancies
