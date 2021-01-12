@@ -18,7 +18,7 @@ namespace P08.IncreaseMinionAge
             {
                 IncrementAge(sqlConnection, minionId);
 
-                string minionName = GetMinionName(sqlConnection,minionId);
+                string minionName = GetMinionName(sqlConnection, minionId);
 
                 MakeNameTitleCase(sqlConnection, minionName, minionId);
             }
@@ -57,7 +57,7 @@ namespace P08.IncreaseMinionAge
             {
                 updateNameQueryText = @"UPDATE MinionsNA
                                                 SET Name=UPPER(LEFT(Name,1))+LOWER(SUBSTRING(Name,2,LEN(Name)))
-                                                WHERE Id = @Id"; ;
+                                                WHERE Id = @Id";
             }
 
             SqlCommand updateNameCmd = new SqlCommand(updateNameQueryText, sqlConnection);
@@ -65,7 +65,7 @@ namespace P08.IncreaseMinionAge
             updateNameCmd.ExecuteNonQuery();
         }
 
-        private static string GetMinionName(SqlConnection sqlConnection,string minionId)
+        private static string GetMinionName(SqlConnection sqlConnection, string minionId)
         {
             string getNameQueryText = @"SELECT Name
                                             FROM MinionsNA
