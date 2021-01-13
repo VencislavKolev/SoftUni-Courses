@@ -63,7 +63,15 @@ SET Name = UPPER(Name)
 WHERE CountryCode = 1
 
 --Task 6
+SELECT Name 
+FROM Villains
+WHERE Id = 1
 
+DELETE FROM MinionsVillains
+WHERE VillainId=1
+
+DELETE FROM Villains
+WHERE Id=1
 --Task 7
 SELECT Name FROM Minions
 
