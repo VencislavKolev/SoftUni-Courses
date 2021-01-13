@@ -1,10 +1,10 @@
 ﻿namespace MiniORM
 {
 	using System;
+	using System.Linq;
+	using System.Data.SqlClient;
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;
-	using System.Data.SqlClient;
-	using System.Linq;
 
 	/// <summary>
 	/// Used for accessing a database, inserting/updating/deleting entities

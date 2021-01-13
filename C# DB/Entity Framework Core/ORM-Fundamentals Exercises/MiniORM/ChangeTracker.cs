@@ -62,9 +62,9 @@ namespace MiniORM
         }
         private static bool IsModified(T proxiEntity, T entity)
         {
-            PropertyInfo[] monitoredProperties = typeof(T)
-                .GetProperties()
-                .Where(pi => DbContext.AllowedSqlTypes.Contains(pi.PropertyType));
+            IEnumerable<PropertyInfo> monitoredProperties = typeof(T)
+                 .GetProperties()
+                 .Where(pi => DbContext.AllowedSqlTypes.Contains(pi.PropertyType));
 
             PropertyInfo[] modifiedProperties = monitoredProperties
                 .Where(pi => !Equals(pi.GetValue(proxiEntity), pi.GetValue(entity)))
