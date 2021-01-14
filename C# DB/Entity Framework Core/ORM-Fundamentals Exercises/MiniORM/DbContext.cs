@@ -3,6 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MiniORM
 {
@@ -121,5 +123,99 @@ namespace MiniORM
                 this.connection.DeleteEntities(dbSet.ChangeTracker.Removed, tableName, columns);
             }
         }
+
+        private void PopulateDbSet<TEntity>(PropertyInfo dbSet)
+            where TEntity : class, new()
+        {
+            var entities = LoadTableEntities<TEntity>();
+
+            DbSet<TEntity> dbSetInstance = new DbSet<TEntity>(entities);
+
+            ReflectionHelper.ReplaceBackingField(this, dbSet.Name, dbSetInstance);
+        }
+
+        private void MapAllRelations()
+        {
+            foreach (var dbSetProperty in this.dbSetProperties)
+            {
+                Type dbSetType = dbSetProperty.Key;
+
+                MethodInfo mapRelationGeneric = typeof(DbContext)
+                    .GetMethod("MapRelations", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .MakeGenericMethod(dbSetType);
+
+                Object dbSet = dbSetProperty.Value.GetValue(this);
+
+                mapRelationGeneric.Invoke(this, new[] { dbSet });
+            }
+        }
+        private void MapRelations<TEntity>(DbSet<TEntity> dbSet)
+            where TEntity : class, new()
+        {
+            Type entityType = typeof(TEntity);
+
+            MapNavigationProperties(dbSet);
+
+            PropertyInfo[] collections = entityType
+                .GetProperties()
+                .Where(pi =>
+                    pi.PropertyType.IsGenericType &&
+                    pi.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
+                .ToArray();
+
+            foreach (PropertyInfo collection in collections)
+            {
+                Type collectionType = collection
+                    .PropertyType
+                    .GenericTypeArguments
+                    .First();
+
+                MethodInfo mapCollectedMethod = typeof(DbContext)
+                    .GetMethod("MapCollection", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .MakeGenericMethod(entityType, collectionType);
+
+                mapCollectedMethod.Invoke(this, new object[] { dbSet, collection });
+            }
+        }
+
+        private void MapCollection<TDbSet, TCollection>(DbSet<TDbSet> dbSet, PropertyInfo collectionProperty)
+            where TDbSet : class, new()
+            where TCollection : class, new()
+        {
+            Type entityType = typeof(TDbSet);
+            Type collectionType = typeof(TCollection);
+
+            PropertyInfo[] primaryKeys = collectionType.GetProperties()
+                .Where(pi => pi.HasAttribute<KeyAttribute>())
+                .ToArray();
+
+            PropertyInfo primaryKey = primaryKeys.First();
+
+            PropertyInfo foreignKey = entityType.GetProperties()
+                .First(pi => pi.HasAttribute<KeyAttribute>());
+
+            bool isManyToMany = primaryKeys.Length >= 2;
+            if (isManyToMany)
+            {
+                primaryKey = collectionType.GetProperties()
+                    .First(pi => collectionType
+                    .GetProperty(pi.GetCustomAttribute<ForeignKeyAttribute>().Name)
+                    .PropertyType == entityType);
+
+                var navigationDbSet = (DbSet<TCollection>)this.dbSetProperties[collectionType].GetValue(this);
+
+                foreach (var entity in dbSet)
+                {
+                    Object primaryKeyValue = foreignKey.GetValue(entity);
+
+                    TCollection[] navigationEntities = navigationDbSet
+                        .Where(navigationEntity => primaryKey.GetValue(navigationEntity).Equals(primaryKeyValue))
+                        .ToArray();
+
+                    ReflectionHelper.ReplaceBackingField(entity, collectionProperty.Name, navigationEntities);
+                }
+            }
+        }
+
     }
 }
