@@ -20,7 +20,10 @@ namespace SoftUni
             //string result = GetEmployeesFromResearchAndDevelopment(dbContext);
             //string result = AddNewAddressToEmployee(dbContext);
             //string result = GetEmployeesInPeriod(dbContext);
-            string result = GetAddressesByTown(dbContext);
+            //string result = GetAddressesByTown(dbContext);
+            //string result = GetEmployee147(dbContext);
+
+            string result = GetDepartmentsWithMoreThan5Employees(dbContext);
 
             Console.WriteLine(result);
         }
@@ -198,6 +201,75 @@ namespace SoftUni
             foreach (var a in addresses)
             {
                 sb.AppendLine($"{a.Address}, {a.Town} - {a.Employees} employees");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        //P09
+        public static string GetEmployee147(SoftUniContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var employee147 = context
+                .Employees
+                .Where(e => e.EmployeeId == 147)
+                .Select(e => new
+                {
+                    e.FirstName,
+                    e.LastName,
+                    e.JobTitle,
+                    Projects = e.EmployeesProjects
+                        .Select(p => p.Project.Name)
+                        .OrderBy(pn => pn)
+                        .ToList()
+                })
+                .Single();
+
+
+            sb.AppendLine($"{employee147.FirstName} {employee147.LastName} - {employee147.JobTitle}");
+            foreach (var projectName in employee147.Projects)
+            {
+                sb.AppendLine(projectName);
+            }
+            return sb.ToString().TrimEnd();
+        }
+
+        //P10
+        public static string GetDepartmentsWithMoreThan5Employees(SoftUniContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var departments = context.
+                Departments
+                .Where(ec => ec.Employees.Count > 5)
+                .OrderBy(d => d.Employees.Count)
+                .ThenBy(d => d.Name)
+                .Select(d => new
+                {
+                    d.Name,
+                    ManagerFirstName = d.Manager.FirstName,
+                    ManagerLastName = d.Manager.LastName,
+                    Employees = d.Employees
+                        .Select(e => new
+                        {
+                            EmployeeFirstName = e.FirstName,
+                            EmployeeLastName = e.LastName,
+                            e.JobTitle
+                        })
+                        .OrderBy(e => e.EmployeeFirstName)
+                        .ThenBy(e => e.EmployeeLastName)
+                        .ToList()
+                })
+                .ToList();
+
+            foreach (var department in departments)
+            {
+                sb.AppendLine($"{department.Name} - {department.ManagerFirstName} {department.ManagerLastName}");
+                foreach (var e in department.Employees)
+                {
+                    sb.AppendLine($"{e.EmployeeFirstName} {e.EmployeeLastName} - {e.JobTitle}");
+                }
             }
 
             return sb.ToString().TrimEnd();
