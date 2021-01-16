@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Loader;
 using System.Text;
+using System.Linq;
+using System.Globalization;
+using System.Collections.Generic;
+
 using SoftUni.Data;
 using SoftUni.Models;
 
@@ -17,7 +18,8 @@ namespace SoftUni
             //string result = GetEmployeesFullInformation(dbContext);
             //string result = GetEmployeesWithSalaryOver50000(dbContext);
             //string result = GetEmployeesFromResearchAndDevelopment(dbContext);
-            string result = AddNewAddressToEmployee(dbContext);
+            //string result = AddNewAddressToEmployee(dbContext);
+            string result = GetEmployeesInPeriod(dbContext);
 
             Console.WriteLine(result);
         }
@@ -125,6 +127,51 @@ namespace SoftUni
             {
                 sb.AppendLine(address);
             }
+            return sb.ToString().TrimEnd();
+        }
+
+        //P07
+        public static string GetEmployeesInPeriod(SoftUniContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var employees = context
+                .Employees
+                .Where(e => e.EmployeesProjects
+                    .Any(ep => ep.Project.StartDate.Year >= 2001 &&
+                         ep.Project.StartDate.Year <= 2003))
+                .Take(10)
+                .Select(e => new
+                {
+                    e.FirstName,
+                    e.LastName,
+                    ManagerFirstName = e.Manager.FirstName,
+                    ManagerLastName = e.Manager.LastName,
+                    Project = e.EmployeesProjects
+                        .Select(ep => new
+                        {
+                            ep.Project.Name,
+                            StartDate = ep.Project
+                            .StartDate
+                            .ToString("M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture),
+                            EndDate = ep.Project.EndDate.HasValue ? ep.Project
+                            .EndDate
+                            .Value
+                            .ToString("M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture)
+                            : "not finished"
+                        }).ToList()
+                }).ToList();
+
+            foreach (var e in employees)
+            {
+                sb.AppendLine($"{e.FirstName} {e.LastName} - Manager: {e.ManagerFirstName} {e.ManagerLastName}");
+
+                foreach (var p in e.Project)
+                {
+                    sb.AppendLine($"--{p.Name} - {p.StartDate} - {p.EndDate}");
+                }
+            }
+
             return sb.ToString().TrimEnd();
         }
     }
