@@ -24,7 +24,8 @@ namespace SoftUni
             //string result = GetEmployee147(dbContext);
 
             //string result = GetDepartmentsWithMoreThan5Employees(dbContext);
-            string result = GetLatestProjects(dbContext);
+            //string result = GetLatestProjects(dbContext);
+            string result = GetEmployeesByFirstNameStartingWithSa(dbContext);
 
             Console.WriteLine(result);
         }
@@ -299,6 +300,33 @@ namespace SoftUni
                 sb.AppendLine(project.Name)
                     .AppendLine(project.Description)
                     .AppendLine(project.StartDate);
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        //P13
+        public static string GetEmployeesByFirstNameStartingWithSa(SoftUniContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var employees = context
+                .Employees
+                .Where(e => e.FirstName.StartsWith("Sa"))
+                .Select(e => new
+                {
+                    e.FirstName,
+                    e.LastName,
+                    e.JobTitle,
+                    e.Salary
+                })
+                .OrderBy(e => e.FirstName)
+                .ThenBy(e => e.LastName)
+                .ToList();
+
+            foreach (var e in employees)
+            {
+                sb.AppendLine($"{e.FirstName} {e.LastName} - {e.JobTitle} - (${e.Salary:f2})");
             }
 
             return sb.ToString().TrimEnd();
