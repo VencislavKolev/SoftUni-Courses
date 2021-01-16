@@ -23,7 +23,8 @@ namespace SoftUni
             //string result = GetAddressesByTown(dbContext);
             //string result = GetEmployee147(dbContext);
 
-            string result = GetDepartmentsWithMoreThan5Employees(dbContext);
+            //string result = GetDepartmentsWithMoreThan5Employees(dbContext);
+            string result = GetLatestProjects(dbContext);
 
             Console.WriteLine(result);
         }
@@ -242,7 +243,7 @@ namespace SoftUni
 
             var departments = context.
                 Departments
-                .Where(ec => ec.Employees.Count > 5)
+                .Where(d => d.Employees.Count > 5)
                 .OrderBy(d => d.Employees.Count)
                 .ThenBy(d => d.Name)
                 .Select(d => new
@@ -270,6 +271,34 @@ namespace SoftUni
                 {
                     sb.AppendLine($"{e.EmployeeFirstName} {e.EmployeeLastName} - {e.JobTitle}");
                 }
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        //P11
+        public static string GetLatestProjects(SoftUniContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var latestProjects = context
+                .Projects
+                .OrderByDescending(p => p.StartDate)
+                .Take(10)
+                .Select(p => new
+                {
+                    p.Name,
+                    p.Description,
+                    StartDate = p.StartDate.ToString("M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture)
+                })
+                .OrderBy(p => p.Name)
+                .ToList();
+
+            foreach (var project in latestProjects)
+            {
+                sb.AppendLine(project.Name)
+                    .AppendLine(project.Description)
+                    .AppendLine(project.StartDate);
             }
 
             return sb.ToString().TrimEnd();
