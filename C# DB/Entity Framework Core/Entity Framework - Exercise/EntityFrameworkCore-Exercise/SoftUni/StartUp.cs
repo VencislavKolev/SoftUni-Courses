@@ -14,19 +14,44 @@ namespace SoftUni
         static void Main(string[] args)
         {
             SoftUniContext dbContext = new SoftUniContext();
-
+            //Problem 3
             //string result = GetEmployeesFullInformation(dbContext);
+
+            //Problem 4
             //string result = GetEmployeesWithSalaryOver50000(dbContext);
+
+            //Problem 5
             //string result = GetEmployeesFromResearchAndDevelopment(dbContext);
+
+            //Problem 6
             //string result = AddNewAddressToEmployee(dbContext);
+
+            //Problem 7
             //string result = GetEmployeesInPeriod(dbContext);
+
+            //Problem 8
             //string result = GetAddressesByTown(dbContext);
+
+            //Problem 9
             //string result = GetEmployee147(dbContext);
 
+            //Problem 10
             //string result = GetDepartmentsWithMoreThan5Employees(dbContext);
+
+            //Problem 11
             //string result = GetLatestProjects(dbContext);
+
+            //Problem 12
             //string result = IncreaseSalaries(dbContext);
+
+            //Problem 13
             //string result = GetEmployeesByFirstNameStartingWithSa(dbContext);
+
+            //Problem 14
+            string result = DeleteProjectById(dbContext);
+
+            //Problem 15
+            //string result = RemoveTown(dbContext);
 
             Console.WriteLine(result);
         }
@@ -314,7 +339,10 @@ namespace SoftUni
             IQueryable<Employee> employeesToIncrease = context
                 .Employees
                 .Where(d => new string[]
-                    { "Marketing", "Engineering", "Information Services", "Tool Design" }
+                    {
+                        "Marketing", "Engineering",
+                        "Information Services", "Tool Design"
+                    }
                     .Contains(d.Department.Name));
 
             foreach (Employee employee in employeesToIncrease)
@@ -366,6 +394,61 @@ namespace SoftUni
             }
 
             return sb.ToString().TrimEnd();
+        }
+
+        //P14
+        public static string DeleteProjectById(SoftUniContext context)
+        {
+            Project projectId2 = context.Projects.First(p => p.ProjectId == 2);
+
+            IQueryable<EmployeeProject> employeesWithProjectId2 = context
+                .EmployeesProjects
+                .Where(p => p.ProjectId == projectId2.ProjectId);
+
+            foreach (var ep in employeesWithProjectId2)
+            {
+                context.EmployeesProjects.Remove(ep);
+            }
+
+            context.Projects.Remove(projectId2);
+            context.SaveChanges();
+
+            List<string> tenProjects = context
+                .Projects
+                .Take(10)
+                .Select(p => p.Name)
+                .ToList();
+
+            return string.Join(Environment.NewLine, tenProjects);
+        }
+
+        //P15
+        public static string RemoveTown(SoftUniContext context)
+        {
+            Town townToDelete = context.Towns.First(t => t.Name == "Seattle");
+
+            IQueryable<Address> addressesToDelete = context.Addresses
+                .Where(a => a.TownId == townToDelete.TownId);
+
+            int addressesCount = addressesToDelete.Count();
+
+            IQueryable<Employee> employeesInTown = context.Employees
+                .Where(e => addressesToDelete
+                    .Any(a => a.AddressId == e.AddressId));
+
+            foreach (var e in employeesInTown)
+            {
+                e.AddressId = null;
+            }
+
+            foreach (var address in addressesToDelete)
+            {
+                context.Addresses.Remove(address);
+            }
+            context.Towns.Remove(townToDelete);
+            context.SaveChanges();
+
+            return $"{addressesCount} addresses in {townToDelete.Name} were deleted";
         }
     }
 }
