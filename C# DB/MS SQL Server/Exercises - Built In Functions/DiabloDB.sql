@@ -2,7 +2,7 @@
 SELECT TOP (50)
       [Name]
       ,FORMAT([Start], 'yyyy-MM-dd') AS [Start]
-  FROM [Diablo].[dbo].[Games]
+  FROM [Games]
   WHERE DATEPART(YEAR,[Start]) IN (2011, 2012)
   ORDER BY [Start], [Name]
 
@@ -10,7 +10,7 @@ SELECT TOP (50)
 SELECT [Username]
 	,RIGHT(Email, LEN([Email]) - CHARINDEX('@',Email)) AS [Email Provider]
 	  --,SUBSTRING(Email,CHARINDEX('@',Email) + 1, LEN([Email])) AS [Provider]
-  FROM [Diablo].[dbo].[Users]
+  FROM [Users]
   ORDER BY [Email Provider], [Username]
 
 --TASK 16
@@ -40,7 +40,7 @@ SELECT [ProductName]
       ,[OrderDate]
 	  ,DATEADD(DAY,3,OrderDate) AS [Pay Due]
 	  ,DATEADD(MONTH,1,OrderDate) AS [Deliver Due]
-  FROM [Orders].[dbo].[Orders]
+  FROM [Orders]
 
 --TASK 19
 --USE Orders

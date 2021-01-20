@@ -14,13 +14,14 @@ SELECT FirstName FROM Employees
 	DATEPART(YEAR, HireDate) BETWEEN 1995 AND 2005)
 
 --TASK 4
-SELECT FirstName FROM Employees
-	WHERE JobTitle NOT LIKE '%engineer%'
+SELECT FirstName, LastName 
+	FROM Employees
+WHERE JobTitle NOT LIKE '%engineer%'
 
 --TASK 5
 SELECT [Name] FROM Towns
 	WHERE LEN([Name]) IN (5,6)
-		ORDER BY [Name]
+ORDER BY [Name]
 
 --TASK 6
 SELECT TownID, [Name] FROM Towns
