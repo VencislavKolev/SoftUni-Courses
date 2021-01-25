@@ -23,7 +23,8 @@ SELECT e.EmployeeID, e.FirstName, e.LastName,d.Name
 ORDER BY e.EmployeeID ASC
 
 --TASK 4
-SELECT e.EmployeeID, e.FirstName, e.LastName, d.Name 
+SELECT TOP(5)
+  e.EmployeeID, e.FirstName, e.Salary, d.Name 
 	FROM Employees AS e
 	JOIN Departments AS d ON e.DepartmentID = d.DepartmentID
 	WHERE e.Salary > 15000
@@ -64,7 +65,7 @@ SELECT e.EmployeeID, e.FirstName ,
 	JOIN Projects AS p ON ep.ProjectID = p.ProjectID 
 
 --TASK 9
-SELECT e.EmployeeID, e.FirstName, e.LastName, m.FirstName AS ManagerName
+SELECT e.EmployeeID, e.FirstName, m.EmployeeID, m.FirstName AS ManagerName
 	FROM Employees AS e
 	JOIN Employees AS m ON e.ManagerID = m.EmployeeID
 	WHERE m.EmployeeID IN (3,7)
