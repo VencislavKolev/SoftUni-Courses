@@ -128,8 +128,7 @@ AS
 									WHERE Id = @TargetRoomId)
 
 	DECLARE @peopleInTrip INT = (SELECT COUNT(*) FROM AccountsTrips AS at
-								WHERE at.TripId = @TripId
-								GROUP BY at.TripId)
+								WHERE at.TripId = @TripId)
 
 	DECLARE @targetRoomBeds INT = (SELECT Beds FROM Rooms
 									WHERE Id = @TargetRoomId)

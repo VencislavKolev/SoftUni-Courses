@@ -59,9 +59,9 @@ CREATE TABLE AccountsTrips
 --TASK 2
 INSERT INTO Accounts
 VALUES
-('John', 'Smith', 'Smith', 34,			'1975-07-21',	'j_smith@gmail.com'),
-('Gosho', NULL,	'Petrov', 11,			'1978-05-16',	'g_petrov@gmail.com'),
-('Ivan', 'Petrovich', 'Pavlov',	59,		'1849-09-26',	'i_pavlov@softuni.bg'),
+('John', 'Smith', 'Smith', 34, '1975-07-21', 'j_smith@gmail.com'),
+('Gosho', NULL,	'Petrov', 11, '1978-05-16',	'g_petrov@gmail.com'),
+('Ivan', 'Petrovich', 'Pavlov',	59,	'1849-09-26', 'i_pavlov@softuni.bg'),
 ('Friedrich', 'Wilhelm', 'Nietzsche', 2,'1844-10-15', 'f_nietzsche@softuni.bg')
 
 INSERT INTO Trips
