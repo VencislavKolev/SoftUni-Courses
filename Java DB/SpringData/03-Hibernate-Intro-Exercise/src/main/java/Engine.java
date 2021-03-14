@@ -1,4 +1,3 @@
-import com.sun.xml.bind.v2.runtime.output.SAXOutput;
 import entities.*;
 
 import javax.persistence.EntityManager;
@@ -40,7 +39,7 @@ public class Engine implements Runnable {
         //addingNewAddressAndUpdatingEmployeeEx6();
 
         //Exercise 7
-        //adressesWithEmployeeCountEx7();
+        //addressesWithEmployeeCountEx7();
 
         //Exercise 8
 //        try {
@@ -137,13 +136,11 @@ public class Engine implements Runnable {
                 .setParameter("pattern", name)
                 .getResultList();
 
-        employees.stream().forEach(employee -> {
-            System.out.printf("%s %s - %s - ($%.2f)%n",
-                    employee.getFirstName(),
-                    employee.getLastName(),
-                    employee.getJobTitle(),
-                    employee.getSalary());
-        });
+        employees.forEach(employee -> System.out.printf("%s %s - %s - ($%.2f)%n",
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getJobTitle(),
+                employee.getSalary()));
     }
 
     private void increaseSalaries() {
@@ -159,13 +156,11 @@ public class Engine implements Runnable {
                 .createQuery("SELECT e FROM Employee AS e " +
                         "WHERE e.department.id IN (1, 2, 4, 11)", Employee.class)
                 .getResultStream()
-                .forEach(emp -> {
-                    System.out.printf("%s %s ($%.2f)%n",
-                            emp.getFirstName(),
-                            emp.getLastName(),
-                            emp.getSalary()
-                    );
-                });
+                .forEach(emp -> System.out.printf("%s %s ($%.2f)%n",
+                        emp.getFirstName(),
+                        emp.getLastName(),
+                        emp.getSalary()
+                ));
     }
 
     private void findLatest10Projects() {
@@ -197,16 +192,14 @@ public class Engine implements Runnable {
 
         employee.getProjects()
                 .stream().sorted(Comparator.comparing(Project::getName))
-                .forEach(project -> {
-                    sb.append(String.format("   %s%n",
-                            project.getName()));
-                });
+                .forEach(project -> sb.append(String.format("   %s%n",
+                        project.getName())));
 
         System.out.println(sb.toString());
 
     }
 
-    private void adressesWithEmployeeCountEx7() {
+    private void addressesWithEmployeeCountEx7() {
         List<Address> addresses = entityManager.createQuery("SELECT a FROM Address AS a " +
                 "ORDER BY a.employees.size DESC ", Address.class)
                 .setMaxResults(10)
@@ -233,12 +226,10 @@ public class Engine implements Runnable {
                 "WHERE e.department.name = 'Research and Development' " +
                 "ORDER BY e.salary ASC, e.id ASC", Employee.class)
                 .getResultStream()
-                .forEach(employee -> {
-                    System.out.printf("%s %s from Research and Development - $%.2f%n",
-                            employee.getFirstName(),
-                            employee.getLastName(),
-                            employee.getSalary());
-                });
+                .forEach(employee -> System.out.printf("%s %s from Research and Development - $%.2f%n",
+                        employee.getFirstName(),
+                        employee.getLastName(),
+                        employee.getSalary()));
     }
 
     private Address createAddress(String addressText) {
