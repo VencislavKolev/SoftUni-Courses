@@ -64,6 +64,7 @@ public class CodeFirstMain {
         Driver driver2 = new Driver("Second Driver", Set.of(truck2, truck3));
         truck2.getDrivers().add(driver2);
         truck3.getDrivers().add(driver2);
+
         em.persist(driver2);
 
         em.getTransaction().commit();
