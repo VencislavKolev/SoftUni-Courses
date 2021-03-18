@@ -6,10 +6,11 @@ public class App {
     public static final String GRINGOTTS_PU = "gringotts";
     public static final String SALES_PU = "sales";
     public static final String UNIVERSITY_SYSTEM_PU = "university_system";
+    public static final String HOSPITAL_PU = "hospital";
 
     public static void main(String[] args) {
         EntityManagerFactory entityManagerFactory =
-                Persistence.createEntityManagerFactory(UNIVERSITY_SYSTEM_PU);
+                Persistence.createEntityManagerFactory(HOSPITAL_PU);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Engine engine = new Engine(entityManager);
