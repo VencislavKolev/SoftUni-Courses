@@ -10,6 +10,9 @@ import java.util.Set;
 @Table(name = "patients")
 public class Patient extends BaseEntity {
 
+    @Transient
+    public static final int MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
     private String firstName;
     private String lastName;
     private String address;
@@ -68,6 +71,8 @@ public class Patient extends BaseEntity {
         this.birthDate = birthDate;
     }
 
+    @Lob
+    @Column(length = MAX_IMAGE_SIZE)
     public byte[] getPicture() {
         return picture;
     }
