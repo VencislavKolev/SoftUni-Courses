@@ -5,10 +5,10 @@
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
              version="2.2">
 
-    <persistence-unit name="university_system">
+    <persistence-unit name="bill_payment">
         <properties>
             <property name="hibernate.connection.url"
-                      value="jdbc:mysql://localhost:3306/university_system_db?createDatabaseIfNotExist=true"/>
+                      value="jdbc:mysql://localhost:3306/bill_payment_db?createDatabaseIfNotExist=true"/>
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
             <property name="hibernate.connection.username" value="root"/>
             <property name="hibernate.connection.password" value="root"/>
