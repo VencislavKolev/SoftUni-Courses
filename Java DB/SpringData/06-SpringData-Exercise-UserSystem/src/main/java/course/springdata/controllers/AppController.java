@@ -28,7 +28,6 @@ public class AppController implements CommandLineRunner {
         this.userService.registerUser(user);
 
 
-
         User user2 = new User("RyanVillopoto", "Pass-321", "rvillopoto@gmail.com", 32);
         this.userService.registerUser(user2);
         user2.setColleagues(Set.of(user));
@@ -39,6 +38,16 @@ public class AppController implements CommandLineRunner {
 //
         this.userService.getAllUsers()
                 .forEach(System.out::println);
+
+        this.getUsersWithEmailPattern();
+    }
+
+    private void getUsersWithEmailPattern() {
+        var users = this.userService.getUsersEndingWith("gmail.com");
+        users.forEach(u -> {
+            System.out.printf("username: %s, email: %s%n",
+                    u.getUsername(), u.getEmail());
+        });
     }
 
     private Set<User> generateUsers() {
@@ -51,7 +60,7 @@ public class AppController implements CommandLineRunner {
             String randomFirstName = this.generateName();
             String randomLastName = this.generateName();
 
-            colleagues.add(new User("Venci" + i, "Pass-" + i, "venci" + i + "@gmail.com", age,randomFirstName,randomLastName));
+            colleagues.add(new User("Venci" + i, "Pass-" + i, "venci" + i + "@gmail.com", age, randomFirstName, randomLastName));
         }
         return colleagues;
     }
