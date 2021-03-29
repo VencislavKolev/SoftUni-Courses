@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -32,8 +32,10 @@
   <ItemGroup>
     <Folder Include="DataProcessor\Dto\Import\" />
     <Folder Include="DataProcessor\Dto\Export\" />
-    <Folder Include="Data\Models\Enums\" />
+    <Folder Include="DataProcessor\Dto\Import\" />
+    <Folder Include="DataProcessor\Dto\Export\" />
     <Folder Include="ExportResults\" />
+    <Folder Include="ImportResults\" />
     <Folder Include="ImportResults\" />
   </ItemGroup>
 
