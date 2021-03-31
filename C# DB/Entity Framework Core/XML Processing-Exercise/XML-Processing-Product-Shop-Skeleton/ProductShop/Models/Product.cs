@@ -21,6 +21,6 @@
         public int? BuyerId { get; set; }
         public User Buyer { get; set; }
 
-        public ICollection<CategoryProduct> CategoryProducts { get; set; }
+        public virtual ICollection<CategoryProduct> CategoryProducts { get; set; }
     }
 }
