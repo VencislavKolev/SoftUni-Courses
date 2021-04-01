@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using CarDealer.Data;
+using CarDealer.Dto.Export;
 using CarDealer.Dto.Import;
 using CarDealer.Models;
 using CarDealer.XlmHelper;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarDealer
 {
@@ -45,28 +48,160 @@ namespace CarDealer
 
             //---------EXPORT---------
 
-            //---------TASK 5---------
-            string cars = GetCarsWithDistance(context);
-            File.WriteAllText(DATASETS_RESULT_PATH + "cars.xml", cars);
+            ////---------TASK 6---------
+            //string cars = GetCarsWithDistance(context);
+            //File.WriteAllText(DATASETS_RESULT_PATH + "cars.xml", cars);
+
+            ////---------TASK 7---------
+            //string bmwCars = GetCarsFromMakeBmw(context);
+            //File.WriteAllText(DATASETS_RESULT_PATH + "bmw-cars.xml", bmwCars);
+
+            ////---------TASK 8---------
+            //string localSuppliers = GetLocalSuppliers(context);
+            //File.WriteAllText(DATASETS_RESULT_PATH + "local-suppliers.xml", localSuppliers);
+
+            ////---------TASK 9---------
+            //string carsWithParts = GetCarsWithTheirListOfParts(context);
+            //File.WriteAllText(DATASETS_RESULT_PATH + "cars-and-parts.xml", carsWithParts);
+
+            //---------TASK 10---------
+            //string customerSales = GetTotalSalesByCustomer(context);
+            //File.WriteAllText(DATASETS_RESULT_PATH + "customers-total-sales.xml", customerSales);
+
+            //---------TASK 11---------
+            string salesInfo = GetSalesWithAppliedDiscount(context);
+            File.WriteAllText(DATASETS_RESULT_PATH + "sales-discounts.xml", salesInfo);
+        }
+
+        //Task11
+        public static string GetSalesWithAppliedDiscount(CarDealerContext context)
+        {
+            ExportSaleInfoDto[] salesInfo = context.Sales
+                .Select(x => new ExportSaleInfoDto
+                {
+                    Car = new ExportCarAttributeDto
+                    {
+                        Make = x.Car.Make,
+                        Model = x.Car.Model,
+                        TravelledDistance = x.Car.TravelledDistance
+                    },
+                    Discount = x.Discount,
+                    CustomerName = x.Customer.Name,
+                    Price = x.Car.PartCars.Sum(x => x.Part.Price),
+                    PriceWithDiscount = x.Car.PartCars.Sum(x => x.Part.Price) - x.Car.PartCars.Sum(x => x.Part.Price) * x.Discount / 100
+                })
+                .ToArray();
+
+            string result = XmlConverter.Serialize<ExportSaleInfoDto>(salesInfo, "sales");
+
+            return result;
+        }
+
+        //Task10
+        public static string GetTotalSalesByCustomer(CarDealerContext context)
+        {
+            var customerSales = context.Customers
+                .Where(x => x.Sales.Any())
+                .Select(x => new ExportCustomerSaleDto
+                {
+                    FullName = x.Name,
+                    BoughtCars = x.Sales.Count,
+                    SpentMoney = x.Sales
+                        .Select(x => x.Car)
+                        .SelectMany(x => x.PartCars)
+                        .Sum(x => x.Part.Price)
+                })
+                .OrderByDescending(x => x.SpentMoney)
+                .ToArray();
+
+            string result = XmlConverter.Serialize<ExportCustomerSaleDto>(customerSales, "customers");
+
+            return result;
+        }
+
+        //Task9
+        public static string GetCarsWithTheirListOfParts(CarDealerContext context)
+        {
+            ExportCarPartDto[] carParts = context.Cars
+                .Select(c => new ExportCarPartDto
+                {
+                    Make = c.Make,
+                    Model = c.Model,
+                    TravelledDistance = c.TravelledDistance,
+                    Parts = c.PartCars
+                        .Select(p => new ExportPartDto
+                        {
+                            Name = p.Part.Name,
+                            Price = p.Part.Price
+                        })
+                        .OrderByDescending(p => p.Price)
+                        .ToArray()
+                })
+                .OrderByDescending(c => c.TravelledDistance)
+                .ThenBy(c => c.Model)
+                .Take(5)
+                .ToArray();
+
+            string result = XmlConverter.Serialize<ExportCarPartDto>(carParts, "cars");
+
+            return result;
+        }
+
+        //Task8
+        public static string GetLocalSuppliers(CarDealerContext context)
+        {
+            var localSuppliers = context.Suppliers
+                .Where(x => x.IsImporter == false)
+                .Select(s => new ExportLocalSupplierDto
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    PartsCount = s.Parts.Count
+                })
+                .ToArray();
+
+            string result = XmlConverter.Serialize<ExportLocalSupplierDto>(localSuppliers, "suppliers");
+
+            return result;
+        }
+
+        //Task7
+        public static string GetCarsFromMakeBmw(CarDealerContext context)
+        {
+            ExportCarBmwDto[] bmwCars = context.Cars
+                .Where(c => c.Make == "BMW")
+                .Select(c => new ExportCarBmwDto
+                {
+                    Id = c.Id,
+                    Model = c.Model,
+                    TravelledDistance = c.TravelledDistance
+                })
+                .OrderBy(c => c.Model)
+                .ThenByDescending(c => c.TravelledDistance)
+                .ToArray();
+
+            string result = XmlConverter.Serialize<ExportCarBmwDto>(bmwCars, "cars");
+
+            return result;
         }
 
         //Task6
         public static string GetCarsWithDistance(CarDealerContext context)
         {
-            ImportCarDto[] cars = context.Cars
+            ExportCarDto[] cars = context.Cars
                 .Where(x => x.TravelledDistance > 2000000)
-                .Select(c => new ImportCarDto
+                .Select(c => new ExportCarDto
                 {
                     Make = c.Make,
                     Model = c.Model,
-                    TraveledDistance = c.TravelledDistance
+                    TravelledDistance = c.TravelledDistance
                 })
                 .OrderBy(c => c.Make)
                 .ThenBy(c => c.Model)
                 .Take(10)
                 .ToArray();
 
-            string result = XmlConverter.Serialize<ImportCarDto>(cars, "cars");
+            string result = XmlConverter.Serialize<ExportCarDto>(cars, "cars");
 
             return result;
         }
