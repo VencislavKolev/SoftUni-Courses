@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace BookShop.Data.Models
+{
+    public class Book
+    {
+        public int Id { get; set; }
+
+        [MaxLength(30)]
+        [Required]
+        public string Name { get; set; }
+
+        public Genre Genre { get; set; }
+
+        public decimal Price { get; set; }
+
+        public int Pages { get; set; }
+
+        [Required]
+        public DateTime PublishedOn { get; set; }
+
+        public virtual ICollection<AuthorBook> AuthorsBooks { get; set; }
+    }
+}
