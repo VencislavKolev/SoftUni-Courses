@@ -19,7 +19,7 @@
             var projectDir = GetProjectDirectory();
 
             ImportEntities(context, projectDir + @"Datasets/", projectDir + @"ImportResults/");
-            //ExportEntities(context, projectDir + @"ExportResults/");
+            ExportEntities(context, projectDir + @"ExportResults/");
 
             using (var transaction = context.Database.BeginTransaction())
             {
@@ -40,14 +40,14 @@
             //PrintAndExportEntityToFile(prisonersMails, exportDir + "ImportPrisonersMails.txt");
 
             var officersPrisoners = DataProcessor.Deserializer.ImportOfficersPrisoners(context, File.ReadAllText(baseDir + "ImportOfficersPrisoners.xml"));
-            PrintAndExportEntityToFile(officersPrisoners, exportDir + "ImportOfficersPrisoners.txt");
+            //PrintAndExportEntityToFile(officersPrisoners, exportDir + "ImportOfficersPrisoners.txt");
         }
 
         private static void ExportEntities(SoftJailDbContext context, string exportDir)
         {
             var jsonOutput = DataProcessor.Serializer.ExportPrisonersByCells(context, new[] { 1, 5, 7, 3 });
-            Console.WriteLine(jsonOutput);
-            File.WriteAllText(exportDir + "PrisonersByCells.json", jsonOutput);
+            //Console.WriteLine(jsonOutput);
+            //File.WriteAllText(exportDir + "PrisonersByCells.json", jsonOutput);
 
             var xmlOutput = DataProcessor.Serializer.ExportPrisonersInbox(context, "Melanie Simonich,Diana Ebbs,Binni Cornhill");
             Console.WriteLine(xmlOutput);
