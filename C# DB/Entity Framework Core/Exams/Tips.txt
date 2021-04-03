@@ -1,0 +1,19 @@
+DateTime date;
+
+bool isValidDate = DateTime.TryParseExact(jsonGame.ReleaseDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+
+if (!isValidDate)
+{
+    sb.AppendLine(ERROR_MESSAGE);
+    continue;
+}
+
+Manual check above
+Auto check below ONLY FOR yyyy-MM-dd
+
+[Required]
+public DateTime? ReleaseDate { get; set; }
+if date is invalid = NULL, 
+but when checking Dto with IsValid it will fail
+
+----------------------------------
