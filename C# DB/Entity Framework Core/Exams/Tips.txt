@@ -17,3 +17,10 @@ if date is invalid = NULL,
 but when checking Dto with IsValid it will fail
 
 ----------------------------------
+ [EnumDataType(typeof(Position))]
+        [XmlElement("Position")]
+        public string Position { get; set; }
+Weapon = Enum.Parse<Weapon>(xmlOfficer.Weapon)
+
+----------------------------------
+ [Range(typeof(decimal), "0", "79228162514264337593543950335")]
