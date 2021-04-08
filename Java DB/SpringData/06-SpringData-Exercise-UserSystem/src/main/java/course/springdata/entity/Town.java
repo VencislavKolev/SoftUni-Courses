@@ -1,9 +1,6 @@
 package course.springdata.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "towns")
@@ -12,6 +9,10 @@ public class Town extends BaseEntity {
     private Country country;
 
     public Town() {
+    }
+
+    public Town(String name) {
+        this.name = name;
     }
 
     public String getName() {

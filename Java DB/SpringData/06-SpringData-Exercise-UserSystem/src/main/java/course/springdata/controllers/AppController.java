@@ -1,6 +1,8 @@
 package course.springdata.controllers;
 
 import course.springdata.entity.User;
+import course.springdata.service.CountryService;
+import course.springdata.service.TownService;
 import course.springdata.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,14 +15,20 @@ import java.util.Set;
 @Controller
 public class AppController implements CommandLineRunner {
     private UserService userService;
+    private TownService townService;
+    private CountryService countryService;
 
     @Autowired
-    public AppController(UserService userService) {
+    public AppController(UserService userService, TownService townService, CountryService countryService) {
         this.userService = userService;
+        this.townService = townService;
+        this.countryService = countryService;
     }
 
     @Override
     public void run(String... args) throws Exception {
+
+        this.initialSeed();
 
         User user = new User("Vencipoto", "Pass-123", "venci362@gmail.com", 23, "Ven", "Ko");
         Set<User> colleagues = this.generateUsers();
@@ -39,7 +47,20 @@ public class AppController implements CommandLineRunner {
         this.userService.getAllUsers()
                 .forEach(System.out::println);
 
+        //--------------QUERIES--------------
         this.getUsersWithEmailPattern();
+
+        this.deleteUsers();
+    }
+
+    private void deleteUsers() {
+        this.userService.updateIsDeteled();
+        this.userService.deleteUsers();
+    }
+
+    private void initialSeed() {
+        this.countryService.seedCountries();
+        this.townService.seedTowns();
     }
 
     private void getUsersWithEmailPattern() {
