@@ -1,4 +1,6 @@
-INSERT INTO shampoo_company.labels(id, title, subtitle) 
+USE shampoo_company;
+
+INSERT INTO labels(id, title, subtitle)
 VALUES (1, 'Repair & Nutrition','For naturally beautiful hair from roots to tips!'),
 (2, 'Taming & Anti-Split Ends','For unruly hair with split ends.'),
 (3, 'Volume & Fullness','Flat & thin hair.'),
@@ -10,8 +12,8 @@ VALUES (1, 'Repair & Nutrition','For naturally beautiful hair from roots to tips
 (9, 'Vital','Tired & lifeless hair'),
 (10, 'Power Volume','Fine & flat hair'),
 (11, 'Anti-Dandruff','Quickly greasing & flaky hair');
-USE shampoo_company;
-INSERT INTO shampoo_company.ingredients(id, name, price)
+
+INSERT INTO ingredients(id, name, price)
 VALUES (1, 'Apple', '0.50'),
 (2, 'Nettle', '0.70'),
 (3, 'Macadamia Oil', '1.00'),
@@ -27,7 +29,7 @@ VALUES (1, 'Apple', '0.50'),
 (13, 'Micro-Crystals', '0.90'),
 (14, 'Active-Caffeine', '1.20');
 
-INSERT INTO shampoo_company.shampoos(id, brand, price, size, label)
+INSERT INTO shampoos(id, brand, price, size, label_id)
 VALUES (1, 'Swiss Green Apple & Nettle', '3.50', '0', 4),
 (2, 'Moroccan Argan Oil & Macadamia', '5.50', '0', 9),
 (3, 'Nature Moments Mediterranean Olive Oil & Aloe Vera', '6.50', '1', 3),
