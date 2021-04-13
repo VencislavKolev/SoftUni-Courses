@@ -29,4 +29,6 @@ public interface BookService {
     void printBookDetails(String title);
 
     void increaseBookCopies(int copies,LocalDate date);
+
+    void deleteBookWithCopiesLeeThan(int copies);
 }

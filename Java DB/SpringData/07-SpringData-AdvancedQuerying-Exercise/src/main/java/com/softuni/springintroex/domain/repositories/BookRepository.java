@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@Transactional
 public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findAllByAgeRestriction(AgeRestriction ageRestriction);
 
@@ -34,8 +35,11 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Book findBookByTitle(String title);
 
-    @Transactional
     @Modifying
     @Query(value = "UPDATE Book b SET b.copies = b.copies + :copies WHERE b.releaseDate > :date")
     int getUpdatedRows(int copies, LocalDate date);
+
+    @Modifying
+    @Query(value = "DELETE FROM Book AS b WHERE b.copies < :copies")
+    int getDeletedRows(int copies);
 }

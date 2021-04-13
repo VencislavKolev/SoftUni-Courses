@@ -131,6 +131,11 @@ public class BookServiceImpl implements BookService {
         System.out.println(this.bookRepo.getUpdatedRows(copies, date) * copies);
     }
 
+    @Override
+    public void deleteBookWithCopiesLeeThan(int copies) {
+        System.out.println(this.bookRepo.getDeletedRows(copies));
+    }
+
     private Set<Category> generateCategories() {
         Set<Category> categories = new HashSet<>();
         Random random = new Random();

@@ -79,11 +79,15 @@ public class Engine implements CommandLineRunner {
 //        //------------11.Reduced Book------------
 //        this.bookService.printBookDetails(reader.readLine());
 
-        //------------12.Increase Book Copies------------
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
-        LocalDate localDate = LocalDate.parse(reader.readLine(), dtf);
+//        //------------12.Increase Book Copies------------
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
+//        LocalDate localDate = LocalDate.parse(reader.readLine(), dtf);
+//        int copies = Integer.parseInt(reader.readLine());
+//        this.bookService.increaseBookCopies(copies, localDate);
+
+        //------------13.Remove Books------------
         int copies = Integer.parseInt(reader.readLine());
-        this.bookService.increaseBookCopies(copies, localDate);
+        this.bookService.deleteBookWithCopiesLeeThan(copies);
     }
 
     private void seedDB() throws IOException {
