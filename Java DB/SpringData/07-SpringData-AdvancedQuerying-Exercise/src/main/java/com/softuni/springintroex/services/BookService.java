@@ -19,4 +19,14 @@ public interface BookService {
     void printBooksNotReleasedIn(LocalDate releaseYear);
 
     void printBooksReleasedBefore(LocalDate releaseYear);
+
+    void printBooksByTitleContaining(String pattern);
+
+    void printBooksByAuthorLastNameStartingWith(String pattern);
+
+    void printNumberOfBooksWithTitleLongerThan(int length);
+
+    void printBookDetails(String title);
+
+    void increaseBookCopies(int copies,LocalDate date);
 }

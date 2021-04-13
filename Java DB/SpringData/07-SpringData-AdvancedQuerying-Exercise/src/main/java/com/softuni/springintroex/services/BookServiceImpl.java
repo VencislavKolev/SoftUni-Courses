@@ -2,6 +2,7 @@ package com.softuni.springintroex.services;
 
 import com.softuni.springintroex.constants.GlobalConstants;
 import com.softuni.springintroex.domain.entities.*;
+import com.softuni.springintroex.domain.entities.dto.BookDto;
 import com.softuni.springintroex.domain.repositories.AuthorRepository;
 import com.softuni.springintroex.domain.repositories.BookRepository;
 import com.softuni.springintroex.domain.repositories.CategoryRepository;
@@ -100,6 +101,34 @@ public class BookServiceImpl implements BookService {
         this.bookRepo.findAllByReleaseDateBefore(releaseDate)
                 .forEach(b -> System.out.printf("%s - %s - $%.2f%n",
                         b.getTitle(), b.getEditionType(), b.getPrice()));
+    }
+
+    @Override
+    public void printBooksByTitleContaining(String pattern) {
+        this.printTitle(this.bookRepo.findAllByTitleContaining(pattern));
+    }
+
+    @Override
+    public void printBooksByAuthorLastNameStartingWith(String pattern) {
+        this.printTitle(this.bookRepo.findAllByAuthorLastNameJPQL(pattern));
+    }
+
+    @Override
+    public void printNumberOfBooksWithTitleLongerThan(int length) {
+        System.out.println(this.bookRepo.countAllByTitleLength(length));
+    }
+
+    @Override
+    public void printBookDetails(String title) {
+        Book book = this.bookRepo.findBookByTitle(title);
+
+        BookDto bookDto = new BookDto(book.getTitle(), book.getEditionType(), book.getAgeRestriction(), book.getPrice());
+        System.out.println(bookDto);
+    }
+
+    @Override
+    public void increaseBookCopies(int copies, LocalDate date) {
+        System.out.println(this.bookRepo.getUpdatedRows(copies, date) * copies);
     }
 
     private Set<Category> generateCategories() {

@@ -56,6 +56,34 @@ public class Engine implements CommandLineRunner {
 //        String input = this.reader.readLine();
 //        LocalDate date = LocalDate.parse(input, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 //        this.bookService.printBooksReleasedBefore(date);
+
+//        //------------6.Authors Search------------
+//        String input = this.reader.readLine();
+//        this.authorService.printAuthorWithFirstNameEndingWith(input);
+
+//        //------------7.Books Search------------
+//        String input = this.reader.readLine();
+//        this.bookService.printBooksByTitleContaining(input);
+
+//        //------------8.Book Titles Search------------
+//        String input = this.reader.readLine();
+//        this.bookService.printBooksByAuthorLastNameStartingWith(input);
+
+//        //------------9.Count Books------------
+//        int input = Integer.parseInt(this.reader.readLine());
+//        this.bookService.printNumberOfBooksWithTitleLongerThan(input);
+
+//        //------------10.Total Book Copies------------
+//        this.authorService.printAuthorsByBookCopies();
+
+//        //------------11.Reduced Book------------
+//        this.bookService.printBookDetails(reader.readLine());
+
+        //------------12.Increase Book Copies------------
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd MMM yyyy");
+        LocalDate localDate = LocalDate.parse(reader.readLine(), dtf);
+        int copies = Integer.parseInt(reader.readLine());
+        this.bookService.increaseBookCopies(copies, localDate);
     }
 
     private void seedDB() throws IOException {
