@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -71,6 +72,36 @@ public class BookServiceImpl implements BookService {
         }
     }
 
+    @Override
+    public void printTitlesByAgeRestriction(AgeRestriction ageRestriction) {
+        List<Book> books = this.bookRepo.findAllByAgeRestriction(ageRestriction);
+        this.printTitle(books);
+    }
+
+    @Override
+    public void printTitlesOfGoldenBooksAndLessThan5000Copies(EditionType editionType, int copies) {
+        printTitle(this.bookRepo.findAllByEditionTypeAndCopiesLessThan(editionType, copies));
+    }
+
+    @Override
+    public void printBooksByPrice(BigDecimal min, BigDecimal max) {
+        this.bookRepo.findAllByPriceLessThanOrPriceGreaterThan(min, max)
+                .forEach(b -> System.out.printf("%s - $%.2f%n",
+                        b.getTitle(), b.getPrice()));
+    }
+
+    @Override
+    public void printBooksNotReleasedIn(LocalDate releaseYear) {
+        this.printTitle(this.bookRepo.findAllByReleaseDateIsNot(releaseYear));
+    }
+
+    @Override
+    public void printBooksReleasedBefore(LocalDate releaseDate) {
+        this.bookRepo.findAllByReleaseDateBefore(releaseDate)
+                .forEach(b -> System.out.printf("%s - %s - $%.2f%n",
+                        b.getTitle(), b.getEditionType(), b.getPrice()));
+    }
+
     private Set<Category> generateCategories() {
         Set<Category> categories = new HashSet<>();
         Random random = new Random();
@@ -80,5 +111,9 @@ public class BookServiceImpl implements BookService {
             categories.add(category);
         }
         return categories;
+    }
+
+    private void printTitle(List<Book> books) {
+        books.forEach(b -> System.out.printf("%s%n", b.getTitle()));
     }
 }
