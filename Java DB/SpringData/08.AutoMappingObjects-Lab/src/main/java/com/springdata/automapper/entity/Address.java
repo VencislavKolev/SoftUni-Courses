@@ -1,8 +1,6 @@
 package com.springdata.automapper.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,11 +9,16 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NonNull
     private String country;
+    @NonNull
     private String city;
+    @NonNull
     private String details;
 }
