@@ -2,16 +2,20 @@ package com.springdata.gamestore.service.impl;
 
 import com.springdata.gamestore.domain.dto.UserLoginDto;
 import com.springdata.gamestore.domain.dto.UserRegisterDto;
+import com.springdata.gamestore.domain.entity.Game;
 import com.springdata.gamestore.domain.entity.Role;
 import com.springdata.gamestore.domain.entity.User;
 import com.springdata.gamestore.repository.UserRepository;
+import com.springdata.gamestore.service.GameService;
 import com.springdata.gamestore.service.UserService;
 import com.springdata.gamestore.util.ValidatorUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,14 +23,16 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepo;
     private final ValidatorUtil validatorUtil;
+    private final GameService gameService;
 
     private User loggedUser;
 
     @Autowired
-    public UserServiceImpl(ModelMapper modelMapper, UserRepository userRepo, ValidatorUtil validatorUtil) {
+    public UserServiceImpl(ModelMapper modelMapper, UserRepository userRepo, ValidatorUtil validatorUtil, GameService gameService) {
         this.modelMapper = modelMapper;
         this.userRepo = userRepo;
         this.validatorUtil = validatorUtil;
+        this.gameService = gameService;
     }
 
     @Override
@@ -83,5 +89,26 @@ public class UserServiceImpl implements UserService {
             this.loggedUser = null;
         }
         return sb.toString();
+    }
+
+    @Override
+    public String buyGame(String title) {
+        StringBuilder sb = new StringBuilder();
+        Game toBuy = this.gameService.findByTitle(title);
+        if (this.loggedUser == null) {
+            sb.append("You must log in before buying.");
+        } else {
+            this.loggedUser.getGames().add(toBuy);
+            this.userRepo.save(this.loggedUser);
+            sb.append("You bought: " + toBuy.getTitle());
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public List<String> getOwnedGames() {
+        return this.loggedUser.getGames()
+                .stream().map(Game::getTitle)
+                .collect(Collectors.toList());
     }
 }

@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,6 +36,6 @@ public class Game {
     @Column(name = "release_date", nullable = false)
     private LocalDate releaseDate;
 
-    @ManyToMany(mappedBy = "games")
-    private List<User> users;
+    @ManyToMany(mappedBy = "games", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    private List<User> users = new ArrayList<>();
 }

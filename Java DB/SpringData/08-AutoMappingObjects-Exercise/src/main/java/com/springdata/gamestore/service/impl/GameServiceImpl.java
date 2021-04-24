@@ -89,10 +89,13 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public GameDetailsFullDto getGameDetails(String title) {
-        Game game = this.gameRepo.findByTitle(title)
-                .orElseThrow(() -> new NoSuchElementException("No such game"));
-        GameDetailsFullDto gameDetails = this.modelMapper.map(game, GameDetailsFullDto.class);
-        return gameDetails;
+        Game game = this.findByTitle(title);
+        return this.modelMapper.map(game, GameDetailsFullDto.class);
+    }
 
+    @Override
+    public Game findByTitle(String title) {
+        return this.gameRepo.findByTitle(title)
+                .orElseThrow(() -> new NoSuchElementException("No such game"));
     }
 }

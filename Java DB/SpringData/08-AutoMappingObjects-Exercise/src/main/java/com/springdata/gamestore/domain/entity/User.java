@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,9 +29,9 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "users_games",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "game_id"))
-    private List<Game> games;
+    private List<Game> games = new ArrayList<>();
 }

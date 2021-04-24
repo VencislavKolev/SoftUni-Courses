@@ -49,6 +49,12 @@ public class AppController implements CommandLineRunner {
                 case "Logout":
                     System.out.println(this.userService.logout());
                     break;
+                case "BuyGame":
+                    System.out.println(this.userService.buyGame(tokens[1]));
+                    break;
+                case "OwnedGames":
+                    this.userService.getOwnedGames().forEach(System.out::println);
+                    break;
                 //-------------------Game--------------------
                 case "AddGame":
                     //LocalDate date = LocalDate.parse(tokens[tokens.length - 1], DateTimeFormatter.ofPattern("dd-MM-yyyy"));

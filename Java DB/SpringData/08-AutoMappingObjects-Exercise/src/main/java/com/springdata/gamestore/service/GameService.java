@@ -20,4 +20,6 @@ public interface GameService {
     Set<GameDetailsDto> getAllGames();
 
     GameDetailsFullDto getGameDetails(String title);
+
+    Game findByTitle(String title);
 }
