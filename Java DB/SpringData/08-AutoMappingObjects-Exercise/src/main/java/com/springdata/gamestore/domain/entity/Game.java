@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class Game {
     @Column(nullable = false)
     private double size;
     @Column(nullable = false)
-    private double price;
+    private BigDecimal price;
     @Column(nullable = false)
     private String description;
     @Column(name = "release_date", nullable = false)
