@@ -72,6 +72,14 @@ public class AppController implements CommandLineRunner {
                 case "DeleteGame":
                     System.out.println(this.gameService.deleteGame(Long.parseLong(tokens[1])));
                     break;
+                //-------------------View Games--------------------
+                case "AllGames":
+                    this.gameService.getAllGames()
+                            .forEach(System.out::println);
+                    break;
+                case "DetailGame":
+                    System.out.println(this.gameService.getGameDetails(tokens[1]));
+                    break;
             }
         }
     }

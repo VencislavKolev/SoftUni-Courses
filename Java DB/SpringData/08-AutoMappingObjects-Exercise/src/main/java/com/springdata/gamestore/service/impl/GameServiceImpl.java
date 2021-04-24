@@ -2,6 +2,8 @@ package com.springdata.gamestore.service.impl;
 
 import com.springdata.gamestore.domain.dto.AddGameDto;
 import com.springdata.gamestore.domain.dto.EditGameDto;
+import com.springdata.gamestore.domain.dto.GameDetailsDto;
+import com.springdata.gamestore.domain.dto.GameDetailsFullDto;
 import com.springdata.gamestore.domain.entity.Game;
 import com.springdata.gamestore.repository.GameRepository;
 import com.springdata.gamestore.service.GameService;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -72,5 +76,23 @@ public class GameServiceImpl implements GameService {
                 .orElseThrow(() -> new NoSuchElementException(
                         String.format("Game with ID: %s does not exist", id)
                 ));
+    }
+
+    @Override
+    public Set<GameDetailsDto> getAllGames() {
+        Set<GameDetailsDto> games = this.gameRepo.findAll()
+                .stream()
+                .map(game -> this.modelMapper.map(game, GameDetailsDto.class))
+                .collect(Collectors.toSet());
+        return games;
+    }
+
+    @Override
+    public GameDetailsFullDto getGameDetails(String title) {
+        Game game = this.gameRepo.findByTitle(title)
+                .orElseThrow(() -> new NoSuchElementException("No such game"));
+        GameDetailsFullDto gameDetails = this.modelMapper.map(game, GameDetailsFullDto.class);
+        return gameDetails;
+
     }
 }
