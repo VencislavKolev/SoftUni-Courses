@@ -5,8 +5,8 @@ import com.springdata.gamestore.domain.dto.UserRegisterDto;
 import com.springdata.gamestore.domain.entity.Game;
 import com.springdata.gamestore.domain.entity.Role;
 import com.springdata.gamestore.domain.entity.User;
+import com.springdata.gamestore.repository.GameRepository;
 import com.springdata.gamestore.repository.UserRepository;
-import com.springdata.gamestore.service.GameService;
 import com.springdata.gamestore.service.UserService;
 import com.springdata.gamestore.util.ValidatorUtil;
 import org.modelmapper.ModelMapper;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,16 +24,17 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepo;
     private final ValidatorUtil validatorUtil;
-    private final GameService gameService;
+    //private final GameService gameService;
+    private final GameRepository gameRepo;
 
     private User loggedUser;
 
     @Autowired
-    public UserServiceImpl(ModelMapper modelMapper, UserRepository userRepo, ValidatorUtil validatorUtil, GameService gameService) {
+    public UserServiceImpl(ModelMapper modelMapper, UserRepository userRepo, ValidatorUtil validatorUtil, GameRepository gameRepo) {
         this.modelMapper = modelMapper;
         this.userRepo = userRepo;
         this.validatorUtil = validatorUtil;
-        this.gameService = gameService;
+        this.gameRepo = gameRepo;
     }
 
     @Override
@@ -72,7 +74,7 @@ public class UserServiceImpl implements UserService {
         if (dbUser.isEmpty()) {
             sb.append("Incorrect username / password").append(System.lineSeparator());
         } else {
-            this.loggedUser = dbUser.get();
+            this.setLoggedUser(dbUser.get());
             sb.append(String.format("Successfully logged in %s%n", dbUser.get().getFullName()));
         }
 
@@ -82,11 +84,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public String logout() {
         StringBuilder sb = new StringBuilder();
-        if (this.loggedUser == null) {
+        if (this.getLoggedUser() == null) {
             sb.append("Cannot log out. No user was logged in.");
         } else {
-            sb.append(String.format("User %s successfully logged out", this.loggedUser.getFullName()));
-            this.loggedUser = null;
+            sb.append(String.format("User %s successfully logged out", this.getLoggedUser().getFullName()));
+            this.setLoggedUser(null);
         }
         return sb.toString();
     }
@@ -94,21 +96,40 @@ public class UserServiceImpl implements UserService {
     @Override
     public String buyGame(String title) {
         StringBuilder sb = new StringBuilder();
-        Game toBuy = this.gameService.findByTitle(title);
-        if (this.loggedUser == null) {
+        Game toBuy = this.gameRepo.findByTitle(title)
+                .orElseThrow(() -> new NoSuchElementException("No such game"));
+
+        if (this.getLoggedUser() == null) {
             sb.append("You must log in before buying.");
         } else {
-            this.loggedUser.getGames().add(toBuy);
-            this.userRepo.save(this.loggedUser);
-            sb.append("You bought: " + toBuy.getTitle());
+            this.getLoggedUser().getGames().add(toBuy);
+            this.userRepo.save(this.getLoggedUser());
+            sb.append("You bought: ").append(toBuy.getTitle());
         }
         return sb.toString();
     }
 
     @Override
     public List<String> getOwnedGames() {
-        return this.loggedUser.getGames()
+        if (this.getLoggedUser() == null) {
+            throw new IllegalArgumentException("You must login first.");
+        }
+
+        return this.getLoggedUser().getGames()
                 .stream().map(Game::getTitle)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public User getUser() {
+        return this.getLoggedUser();
+    }
+
+    public User getLoggedUser() {
+        return this.loggedUser;
+    }
+
+    public void setLoggedUser(User loggedUser) {
+        this.loggedUser = loggedUser;
     }
 }

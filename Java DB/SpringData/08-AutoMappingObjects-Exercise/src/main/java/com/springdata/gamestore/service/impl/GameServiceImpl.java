@@ -5,8 +5,10 @@ import com.springdata.gamestore.domain.dto.EditGameDto;
 import com.springdata.gamestore.domain.dto.GameDetailsDto;
 import com.springdata.gamestore.domain.dto.GameDetailsFullDto;
 import com.springdata.gamestore.domain.entity.Game;
+import com.springdata.gamestore.domain.entity.Role;
 import com.springdata.gamestore.repository.GameRepository;
 import com.springdata.gamestore.service.GameService;
+import com.springdata.gamestore.service.UserService;
 import com.springdata.gamestore.util.ValidatorUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,51 +24,55 @@ public class GameServiceImpl implements GameService {
     private final ValidatorUtil validatorUtil;
     private final ModelMapper modelMapper;
     private final GameRepository gameRepo;
+    private final UserService userService;
 
     @Autowired
-    public GameServiceImpl(ValidatorUtil validatorUtil, ModelMapper modelMapper, GameRepository gameRepo) {
+    public GameServiceImpl(ValidatorUtil validatorUtil, ModelMapper modelMapper, GameRepository gameRepo, UserService userService) {
         this.validatorUtil = validatorUtil;
         this.modelMapper = modelMapper;
         this.gameRepo = gameRepo;
+        this.userService = userService;
     }
-
 
     @Override
     public String addGame(AddGameDto gameDto) {
-
-        if (this.validatorUtil.isValid(gameDto)) {
-            Game game = this.modelMapper.map(gameDto, Game.class);
-            this.gameRepo.save(game);
-            sb.append("Added " + gameDto.getTitle());
-        } else {
-            this.validatorUtil.violations(gameDto)
-                    .forEach(e -> sb.append(String.format("%s%n", e.getMessage())));
+        if (this.checkIfAuthorized()) {
+            if (this.validatorUtil.isValid(gameDto)) {
+                Game game = this.modelMapper.map(gameDto, Game.class);
+                this.gameRepo.save(game);
+                sb.append("Added ").append(gameDto.getTitle());
+            } else {
+                this.validatorUtil.violations(gameDto)
+                        .forEach(e -> sb.append(String.format("%s%n", e.getMessage())));
+            }
         }
-
         return sb.toString().trim();
     }
 
     @Override
     public String editGame(Long id, EditGameDto gameDto) {
-        Game existing = this.getGameById(id);
-        if (this.validatorUtil.isValid(gameDto)) {
-            existing.setPrice(gameDto.getPrice());
-            existing.setSize(gameDto.getSize());
-        } else {
-            this.validatorUtil.violations(gameDto)
-                    .forEach(e -> sb.append(String.format("%s%n", e.getMessage())));
+        if (this.checkIfAuthorized()) {
+            Game existing = this.getGameById(id);
+            if (this.validatorUtil.isValid(gameDto)) {
+                existing.setPrice(gameDto.getPrice());
+                existing.setSize(gameDto.getSize());
+            } else {
+                this.validatorUtil.violations(gameDto)
+                        .forEach(e -> sb.append(String.format("%s%n", e.getMessage())));
+            }
+            this.gameRepo.save(existing);
+            sb.append("Edited ").append(existing.getTitle());
         }
-        this.gameRepo.save(existing);
-
-        sb.append("Edited " + existing.getTitle());
         return sb.toString();
     }
 
     @Override
     public String deleteGame(Long id) {
-        Game toDelete = this.getGameById(id);
-        this.gameRepo.delete(toDelete);
-        sb.append("Deleted " + toDelete.getTitle());
+        if (this.checkIfAuthorized()) {
+            Game toDelete = this.getGameById(id);
+            this.gameRepo.delete(toDelete);
+            sb.append("Deleted ").append(toDelete.getTitle());
+        }
         return sb.toString();
     }
 
@@ -97,5 +103,13 @@ public class GameServiceImpl implements GameService {
     public Game findByTitle(String title) {
         return this.gameRepo.findByTitle(title)
                 .orElseThrow(() -> new NoSuchElementException("No such game"));
+    }
+
+    private boolean checkIfAuthorized() {
+        if (this.userService.getUser() == null || this.userService.getUser().getRole().equals(Role.USER)) {
+            sb.append("You are not authorized to Add/Edit/Delete games.");
+            return false;
+        }
+        return true;
     }
 }
