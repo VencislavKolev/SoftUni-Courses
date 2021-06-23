@@ -55,9 +55,72 @@
             ////----------------12. Total Book Copies----------------
             //Console.WriteLine(CountCopiesByAuthor(db));
 
-            //----------------13. Profit by Category----------------
-            Console.WriteLine(GetTotalProfitByCategory(db));
+            ////----------------13. Profit by Category----------------
+            //Console.WriteLine(GetTotalProfitByCategory(db));
 
+            ////----------------14. Most Recent Books----------------
+            //Console.WriteLine(GetMostRecentBooks(db));
+
+            ////----------------15. Increase Prices----------------
+            //IncreasePrices(db);
+
+            ////----------------16. Remove Books----------------
+            //Console.WriteLine(RemoveBooks(db));
+        }
+
+        public static int RemoveBooks(BookShopContext context)
+        {
+            var books = context.Books
+                .Where(x => x.Copies < 4200);
+
+            int count = books.Count();
+            context.RemoveRange(books);
+            context.SaveChanges();
+
+            return count;
+        }
+
+        public static void IncreasePrices(BookShopContext context)
+        {
+            var books = context.Books
+                .Where(x => x.ReleaseDate.Value.Year < 2010);
+
+            foreach (var book in books)
+            {
+                book.Price += 5;
+            }
+            context.SaveChanges();
+        }
+
+        public static string GetMostRecentBooks(BookShopContext context)
+        {
+            var result = context.Categories
+                .Select(x => new
+                {
+                    Category = x.Name,
+                    Books = x.CategoryBooks
+                        .Select(x => new
+                        {
+                            Title = x.Book.Title,
+                            ReleaseDate = x.Book.ReleaseDate.Value.Year
+                        })
+                        .OrderByDescending(x => x.ReleaseDate)
+                        .Take(3)
+                })
+                .OrderBy(x => x.Category)
+                .ToArray();
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in result)
+            {
+                sb.AppendLine($"--{item.Category}");
+                foreach (var book in item.Books)
+                {
+                    sb.AppendLine($"{book.Title} ({book.ReleaseDate})");
+                }
+            }
+
+            return sb.ToString().TrimEnd();
         }
 
         public static string GetTotalProfitByCategory(BookShopContext context)
@@ -65,17 +128,17 @@
             var result = context.Categories
                 .Select(x => new
                 {
-                    Categorie = x.Name,
+                    Category = x.Name,
                     Profit = x.CategoryBooks.Sum(x => x.Book.Copies * x.Book.Price)
                 })
                 .OrderByDescending(x => x.Profit)
-                .ThenBy(x => x.Categorie)
+                .ThenBy(x => x.Category)
                 .ToArray();
 
             StringBuilder sb = new StringBuilder();
             foreach (var item in result)
             {
-                sb.AppendLine($"{item.Categorie} ${item.Profit:f2}");
+                sb.AppendLine($"{item.Category} ${item.Profit:f2}");
             }
             return sb.ToString().TrimEnd();
         }
