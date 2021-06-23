@@ -3,12 +3,9 @@
     using System;
     using System.Globalization;
     using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using BookShop.Models.Enums;
     using Data;
-    using Initializer;
-    using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
     public class StartUp
     {
@@ -35,10 +32,67 @@
             //string command = Console.ReadLine();
             //Console.WriteLine(GetBooksByCategory(db, command));
 
-            //----------------7. Released Before Date----------------
-            string command = Console.ReadLine();
-            Console.WriteLine(GetBooksReleasedBefore(db, command));
+            ////----------------7. Released Before Date----------------
+            //string command = Console.ReadLine();
+            //Console.WriteLine(GetBooksReleasedBefore(db, command));
 
+            ////----------------8. Author Search----------------
+            //string command = Console.ReadLine();
+            //Console.WriteLine(GetAuthorNamesEndingIn(db, command));
+
+            ////----------------9. Book Search----------------
+            //string command = Console.ReadLine();
+            //Console.WriteLine(GetBookTitlesContaining(db, command));
+
+            //----------------10. Book Search by Author----------------
+            string command = Console.ReadLine();
+            Console.WriteLine(GetBooksByAuthor(db, command));
+
+        }
+        public static string GetBooksByAuthor(BookShopContext context, string input)
+        {
+            var result = context.Books
+                .Where(x => x.Author.LastName.StartsWith(input.ToLower()))
+                .OrderBy(x => x.BookId)
+                .Select(x => new
+                {
+                    Title = x.Title,
+                    Author = String.Join(" ", x.Author.FirstName, x.Author.LastName)
+                })
+                .ToArray();
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var book in result)
+            {
+                sb.AppendLine($"{book.Title} ({book.Author})");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        public static string GetBookTitlesContaining(BookShopContext context, string input)
+        {
+            var result = context.Books
+                .Where(x => x.Title.Contains(input.ToLower()))
+                .Select(x => x.Title)
+                .OrderBy(x => x)
+                .ToArray();
+
+            return String.Join(Environment.NewLine, result);
+        }
+
+        public static string GetAuthorNamesEndingIn(BookShopContext context, string input)
+        {
+            var result = context.Authors
+                .Where(x => x.FirstName.EndsWith(input))
+                .ToArray();
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var author in result)
+            {
+                sb.AppendLine($"{author.FirstName} {author.LastName}");
+            }
+            return sb.ToString().TrimEnd();
         }
 
         public static string GetBooksReleasedBefore(BookShopContext context, string date)
