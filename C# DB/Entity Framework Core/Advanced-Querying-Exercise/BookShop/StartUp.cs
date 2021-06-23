@@ -44,11 +44,70 @@
             //string command = Console.ReadLine();
             //Console.WriteLine(GetBookTitlesContaining(db, command));
 
-            //----------------10. Book Search by Author----------------
-            string command = Console.ReadLine();
-            Console.WriteLine(GetBooksByAuthor(db, command));
+            ////----------------10. Book Search by Author----------------
+            //string command = Console.ReadLine();
+            //Console.WriteLine(GetBooksByAuthor(db, command));
+
+            ////----------------11. Count Books----------------
+            //int length = int.Parse(Console.ReadLine());
+            //Console.WriteLine(CountBooks(db, length));
+
+            ////----------------12. Total Book Copies----------------
+            //Console.WriteLine(CountCopiesByAuthor(db));
+
+            //----------------13. Profit by Category----------------
+            Console.WriteLine(GetTotalProfitByCategory(db));
 
         }
+
+        public static string GetTotalProfitByCategory(BookShopContext context)
+        {
+            var result = context.Categories
+                .Select(x => new
+                {
+                    Categorie = x.Name,
+                    Profit = x.CategoryBooks.Sum(x => x.Book.Copies * x.Book.Price)
+                })
+                .OrderByDescending(x => x.Profit)
+                .ThenBy(x => x.Categorie)
+                .ToArray();
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in result)
+            {
+                sb.AppendLine($"{item.Categorie} ${item.Profit:f2}");
+            }
+            return sb.ToString().TrimEnd();
+        }
+
+        public static string CountCopiesByAuthor(BookShopContext context)
+        {
+            var result = context.Authors
+                .Select(x => new
+                {
+                    Author = x.FirstName + " " + x.LastName,
+                    Copies = x.Books.Sum(x => x.Copies)
+                })
+                .OrderByDescending(x => x.Copies)
+                .ToArray();
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in result)
+            {
+                sb.AppendLine($"{item.Author} - {item.Copies}");
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        public static int CountBooks(BookShopContext context, int lengthCheck)
+        {
+            var count = context.Books
+                .Count(x => x.Title.Length > lengthCheck);
+
+            return count;
+        }
+
         public static string GetBooksByAuthor(BookShopContext context, string input)
         {
             var result = context.Books
