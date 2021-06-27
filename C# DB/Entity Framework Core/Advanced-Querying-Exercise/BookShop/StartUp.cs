@@ -1,6 +1,7 @@
 ﻿namespace BookShop
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -245,14 +246,22 @@
 
         public static string GetBooksByCategory(BookShopContext context, string input)
         {
-            var categories = input.Split(new char[] { ' ' }).ToArray();
-            var result = context.Books
-                .Where(x => x.BookCategories.Any(x => categories.Contains(x.Category.Name.ToLower())))
-                .Select(x => x.Title)
-                .OrderBy(x => x)
+            var categories = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(c => c.ToLower())
                 .ToArray();
 
-            return String.Join(Environment.NewLine, result);
+            var booksByCategory = new List<string>();
+            foreach (var category in categories)
+            {
+                var currCategorieBookTitles = context.Books
+                    .Where(x => x.BookCategories.Any(bc => bc.Category.Name.ToLower() == category))
+                    .Select(x => x.Title)
+                    .ToArray();
+
+                booksByCategory.AddRange(currCategorieBookTitles);
+            }
+
+            return String.Join(Environment.NewLine, booksByCategory.OrderBy(x => x));
         }
 
         public static string GetBooksNotReleasedIn(BookShopContext context, int year)
