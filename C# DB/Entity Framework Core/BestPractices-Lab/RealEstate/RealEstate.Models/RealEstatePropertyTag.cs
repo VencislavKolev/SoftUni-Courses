@@ -1,4 +1,6 @@
-﻿namespace RealEstate.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RealEstate.Models
 {
     public class RealEstatePropertyTag
     {
