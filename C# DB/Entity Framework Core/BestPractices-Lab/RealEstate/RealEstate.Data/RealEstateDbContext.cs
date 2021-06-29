@@ -5,7 +5,7 @@ namespace RealEstate.Data
 {
     public class RealEstateDbContext : DbContext
     {
-        private const string ConnectionString = "Server=.;Database=RealEstate;Integrated Security=true;";
+        //private const string ConnectionString = "Server=.;Database=RealEstate;Integrated Security=true;";
 
         public RealEstateDbContext()
         {
@@ -31,7 +31,7 @@ namespace RealEstate.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(ConnectionString);
+                optionsBuilder.UseSqlServer();
             }
         }
 
