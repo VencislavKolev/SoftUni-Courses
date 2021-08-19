@@ -1,0 +1,16 @@
+Aug 04, 2021 10:47:08 PM timeServer.TimeServer main
+INFO: TimeServer stated on port: 8080
+Aug 04, 2021 10:47:16 PM timeServer.TimeServer main
+INFO: TimeServer connection accepted: Socket[addr=/127.0.0.1,port=60835,localport=8080]
+Aug 04, 2021 10:47:18 PM timeServer.TimeServer main
+INFO: TimeServer connection accepted: Socket[addr=/127.0.0.1,port=60842,localport=8080]
+Aug 04, 2021 10:47:20 PM timeServer.TimeServer main
+INFO: TimeServer connection accepted: Socket[addr=/127.0.0.1,port=60843,localport=8080]
+Aug 04, 2021 10:47:22 PM timeServer.TimeServer main
+INFO: TimeServer connection accepted: Socket[addr=/127.0.0.1,port=60845,localport=8080]
+Aug 04, 2021 10:47:24 PM timeServer.TimeServer main
+INFO: TimeServer connection accepted: Socket[addr=/127.0.0.1,port=60846,localport=8080]
+Aug 04, 2021 10:47:26 PM timeServer.TimeServer main
+INFO: TimeServer connection accepted: Socket[addr=/127.0.0.1,port=60847,localport=8080]
+Aug 04, 2021 10:47:28 PM timeServer.TimeServer main
+INFO: TimeServer connection accepted: Socket[addr=/127.0.0.1,port=64739,localport=8080]
