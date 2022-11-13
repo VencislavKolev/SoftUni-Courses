@@ -1,19 +1,19 @@
 function calculator() {
-    let selector1Element;
-    let selector2Element;
-    let resultElement;
+    let a;
+    let b;
+    let result;
 
     return {
         init: (selector1, selector2, resultSelector) => {
-            selector1Element = selector1;
-            selector2Element = selector2;
-            resultElement = resultSelector;
+            a = document.querySelector(selector1);
+            b = document.querySelector(selector2);
+            result = document.querySelector(resultSelector);
         },
         add: () => {
-            document.querySelector(resultElement).value = Number(document.querySelector(selector1Element).value) + Number(document.querySelector(selector2Element).value);
+            result.value = Number(a.value) + Number(b.value);
         },
         subtract: () => {
-            document.querySelector(resultElement).value = Number(document.querySelector(selector1Element).value) - Number(document.querySelector(selector2Element).value);
+            result.value = Number(a.value) - Number(b.value);
         }
     }
 }
